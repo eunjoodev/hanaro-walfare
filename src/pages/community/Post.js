@@ -10,23 +10,23 @@ const initialComments = {
       id: 1,
       userId: "user1",
       content: "첫 번째 댓글입니다.",
-      date: "2024-07-21",
+      date: "2024-07-21"
     },
     {
       id: 2,
       userId: "user2",
       content: "두 번째 댓글입니다.",
-      date: "2024-07-23",
-    },
+      date: "2024-07-23"
+    }
   ],
   2: [
     {
       id: 1,
       userId: "user1",
       content: "다른 게시글의 첫 번째 댓글입니다.",
-      date: "2024-07-25",
-    },
-  ],
+      date: "2024-07-25"
+    }
+  ]
 };
 
 function Post() {
@@ -38,7 +38,7 @@ function Post() {
 
   const handleEditPost = () => {
     navigate("/community/board/create", {
-      state: { title, content, isEdit: true },
+      state: { title, content, isEdit: true }
     });
   };
 
@@ -46,7 +46,7 @@ function Post() {
     const newComment = {
       id: comments.length + 1,
       userId: "newUser",
-      content: newContent,
+      content: newContent
     };
     setComments([...comments, newComment]);
   };
@@ -100,7 +100,7 @@ function Post() {
   );
 }
 
-// export default Post;
+export default Post;
 
 // import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
