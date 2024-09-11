@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from "react";
 import styles from "./FilterComponent.module.css";
+import backendUrl from "../../config";
 
 const FilterComponent = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
     userType: "",
     applicationMethod: "",
-    serviceFields: [],
+    serviceFields: []
   });
 
   const [filterOptions, setFilterOptions] = useState({
     userTypes: [],
     applicationMethods: [],
-    serviceFields: [],
+    serviceFields: []
   });
 
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
-        const response = await fetch("/main/target-list");
+        const response = await fetch(`${backendUrl}/main/target-list`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch filter options");
+        }
         const data = await response.json();
         setFilterOptions({
-          userTypes: data.data.userType,
-          applicationMethods: data.data.applicationMethod,
-          serviceFields: data.data.serviceFiled,
+          userTypes: data.data.userTypes || [],
+          applicationMethods: data.data.applicationMethods || [],
+          serviceFields: data.data.serviceFields || []
         });
       } catch (error) {
         console.error("Failed to fetch filter options", error);
@@ -41,14 +45,14 @@ const FilterComponent = ({ onFilterChange }) => {
   const handleUserTypeChange = (e) => {
     setFilters((prev) => ({
       ...prev,
-      userType: e.target.value,
+      userType: e.target.value
     }));
   };
 
   const handleApplicationMethodChange = (e) => {
     setFilters((prev) => ({
       ...prev,
-      applicationMethod: e.target.value,
+      applicationMethod: e.target.value
     }));
   };
 

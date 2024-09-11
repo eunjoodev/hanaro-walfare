@@ -3,12 +3,13 @@ import styles from "./WelfareList.module.css";
 import WelfareListHeader from "./WelfareListHeader";
 import WelfareBox from "./WelfareBox";
 import FilterComponent from "./FilterComponent";
+import backendUrl from "../../config";
 
 const WelfareList = () => {
   const [filters, setFilters] = useState({
     userType: "",
     applicationMethod: "",
-    serviceFields: [],
+    serviceFields: []
   });
 
   const [welfareItems, setWelfareItems] = useState([]);
@@ -16,21 +17,21 @@ const WelfareList = () => {
   const [itemsPerPage, setItemsPerPage] = useState(24);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const [layout, setLayout] = useState("grid"); // 'grid' or 'list'
+  const [layout, setLayout] = useState("grid");
 
-  // 필터 적용 시 API 호출
   const fetchWelfareItems = useCallback(async () => {
     const query = new URLSearchParams({
       "user-type": filters.userType || "",
       "application-method": filters.applicationMethod || "",
       "service-field": filters.serviceFields.join(","),
       page: page.toString(),
-      size: itemsPerPage.toString(),
+      size: itemsPerPage.toString()
     });
 
     try {
-      const response = await fetch(`/main?${query.toString()}`);
+      const response = await fetch(`${backendUrl}/main?${query.toString()}`);
       const data = await response.json();
+      console.log("API 응답 데이터:", data);
       setWelfareItems(data.data.content);
       setTotalItems(data.data.totalElements);
       setTotalPages(data.data.totalPages);
@@ -43,16 +44,14 @@ const WelfareList = () => {
     fetchWelfareItems();
   }, [fetchWelfareItems]);
 
-  // 필터 변경 핸들러
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
-    setPage(0); // 필터 변경 시 페이지를 0으로 초기화
+    setPage(0);
   };
 
-  // 아이템 표시 갯수 변경 핸들러
   const handleItemsPerPageChange = (newSize) => {
     setItemsPerPage(newSize);
-    setPage(0); // 표시 갯수 변경 시 페이지를 0으로 초기화
+    setPage(0);
   };
 
   return (
