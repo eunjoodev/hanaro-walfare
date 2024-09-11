@@ -11,7 +11,7 @@ const Footer = () => {
             className={styles.logo}
             alt="대한민국정부"
           />
-          <span className={styles.logoText}>복지 24</span>
+          <span className={styles.logoText}>하나로 복지</span>
         </div>
         <div className={styles.fCnt}>
           <div className={styles.fInfo}>
