@@ -14,7 +14,7 @@ const KeyBenefits = () => {
     { id: 3, content: "혜택 3" },
     { id: 4, content: "혜택 4" },
     { id: 5, content: "혜택 5" },
-    { id: 6, content: "혜택 6" },
+    { id: 6, content: "혜택 6" }
   ];
 
   useEffect(() => {
@@ -70,11 +70,11 @@ const KeyBenefits = () => {
         </span>
         <div className={styles.buttons}>
           <button onClick={handlePrev} className={styles.navButton}>
-            {"<"}
+            <img src="/assets/CaretLeft.png" className={styles.CaretLeft} />
           </button>
           <div className={styles.separator}></div>
           <button onClick={handleNext} className={styles.navButton}>
-            {">"}
+            <img src="/assets/CaretRight.png" className={styles.CaretRight} />
           </button>
           <button onClick={handlePausePlay} className={styles.pauseButton}>
             {isPaused ? "▶" : "||"}
