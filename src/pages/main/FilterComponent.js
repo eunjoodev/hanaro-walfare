@@ -23,10 +23,11 @@ const FilterComponent = ({ onFilterChange }) => {
           throw new Error("Failed to fetch filter options");
         }
         const data = await response.json();
+        console.log("Filter API Response:", data);
         setFilterOptions({
-          userTypes: data.data.userTypes || [],
-          applicationMethods: data.data.applicationMethods || [],
-          serviceFields: data.data.serviceFields || []
+          userTypes: data.data.userType || [], // userTypes를 userType으로 변경
+          applicationMethods: data.data.applicationMethod || [], // 필드명 일치
+          serviceFields: data.data.serviceFiled || [] // serviceFields를 serviceFiled로 수정
         });
       } catch (error) {
         console.error("Failed to fetch filter options", error);
