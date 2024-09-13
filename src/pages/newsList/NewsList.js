@@ -141,7 +141,7 @@ const NewsList = () => {
                     {currentArticles.map((article) => (
                       <tr
                         key={article.id}
-                        onClick={() => handleArticleClick(article)}
+                        // onClick={() => handleArticleClick(article)}
                       >
                         <td>{article.id}</td>
                         <td>{article.title || "N/A"}</td>
