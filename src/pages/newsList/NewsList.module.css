@@ -38,3 +38,28 @@
     margin-bottom: 20px;
     box-sizing: border-box;
   }
+
+.searchForm {
+  display: flex;
+  align-items: center;
+}
+
+.searchBar {
+  flex-grow: 1; /* 검색창이 공간을 꽉 차게 함 */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.searchButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.searchButton img {
+  width: 30px; /* 아이콘 크기 조정 */
+  height: auto;
+}
+

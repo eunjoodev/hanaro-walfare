@@ -86,6 +86,11 @@ const NewsList = () => {
     if (error) console.error("Error saving click data:", error);
   };
 
+  const handleSearchSubmit = (event) => {
+    event.preventDefault(); // 기본 폼 제출 방지
+    handleSearch({ target: { value: searchTerm } }); // 검색 실행
+  };
+
   const filteredArticles = articles.filter(
     (article) =>
       article.title &&
@@ -106,13 +111,19 @@ const NewsList = () => {
         <div className={styles.contentWrap}>
           <div className={styles.newsListContainer}>
             <h1>뉴스리스트</h1>
-            <input
-              type="text"
-              placeholder="검색어를 입력하세요"
-              value={searchTerm}
-              onChange={handleSearch}
-              className={styles.searchBar}
-            />
+            <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
+              <input
+                type="text"
+                placeholder="검색어를 입력하세요"
+                value={searchTerm}
+                onChange={handleSearch}
+                className={styles.searchBar}
+              />
+              <button type="submit" className={styles.searchButton}>
+                <i className="fas fa-search"></i>{" "}
+                {/* Font Awesome search icon */}
+              </button>
+            </form>
             {loading ? (
               <p>Loading...</p>
             ) : (
