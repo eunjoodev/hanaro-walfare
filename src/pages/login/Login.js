@@ -6,8 +6,7 @@ import { authState } from "../../states/Auth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL =
-  "http://ec2-43-201-19-45.ap-northeast-2.compute.amazonaws.com:8080";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 const Login = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loginData, setLoginData] = useState({
@@ -68,9 +67,9 @@ const Login = () => {
       password: loginData.password,
     };
 
+    console.log(API_URL);
     try {
       const response = await axios.post(`${API_URL}/auth/login`, sendLoginData);
-
       if (response.status === 200) {
         const { accessToken } = response.data;
 

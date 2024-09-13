@@ -4,8 +4,7 @@ import Modal from "../../components/common/modal/Modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_URL =
-  "http://ec2-43-201-19-45.ap-northeast-2.compute.amazonaws.com:8080";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 const Sign = () => {
   const [userData, setUserData] = useState({
     uid: "",
