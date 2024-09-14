@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-      {
-          "source": "/api/:path*",
-          "destination": process.env.REACT_APP_BACKEND_URL + "/:path*"
-      }
-  ]
-}
