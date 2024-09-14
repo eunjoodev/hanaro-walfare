@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = [
-  "https://hanaro-walfare.vercel.app",
+  "https://hanaro-walfare1.vercel.app",
 ];
 
 const corsOptions = {
