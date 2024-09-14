@@ -11,7 +11,10 @@ const KeyBenefits = () => {
   useEffect(() => {
     const fetchBenefits = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/main?page=0&size=6`);
+        // 프록시 URL 설정
+        const apiUrl = `/api/proxy/main?page=0&size=6`;
+
+        const response = await fetch(apiUrl);
         const data = await response.json();
         console.log("API 응답 데이터:", data);
         if (data && data.data) {
