@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import axios from "axios";
 import styles from "./CreatePost.module.css";
 import Button from "./../../components/common/button/Button";
 
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
 function CreatePost() {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const isEdit = state?.isEdit || false;
   const [title, setTitle] = useState(state?.title || "");
   const [content, setContent] = useState(state?.content || "");
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     if (isEdit) {
@@ -17,11 +22,34 @@ function CreatePost() {
     }
   }, [isEdit, state?.content]);
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    setFiles(e.target.files);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const action = isEdit ? "Updated" : "New";
-    console.log(`${action} Post - Title:`, title);
-    console.log(`${action} Post - Content:`, content);
+    try {
+      // FormData 객체 생성
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", content);
+
+      // 선택된 파일을 FormData에 추가
+      for (let i = 0; i < files.length; i++) {
+        formData.append("multipartFileList", files[i]);
+      }
+
+      const response = await axios.post(`${API_URL}/question/add`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Post Response:", response.data);
+      navigate("/community/board");
+    } catch (error) {
+      console.error("Error submitting post", error);
+    }
   };
 
   const modules = {

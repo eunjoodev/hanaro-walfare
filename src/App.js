@@ -24,38 +24,38 @@ const router = createBrowserRouter([
         children: [
           {
             path: "board",
-            element: <BulletinBoard />,
+            element: <BulletinBoard />
           },
           {
             path: "faq",
-            element: <FAQ />,
+            element: <FAQ />
           },
           {
             path: "board/create",
-            element: <CreatePost />,
+            element: <CreatePost />
           },
           {
             path: "board/post",
-            element: <Post />,
+            element: <Post />
           },
           {
             path: "*",
-            element: <BulletinBoard />,
-          },
-        ],
+            element: <BulletinBoard />
+          }
+        ]
       },
       {
         path: "/sign",
-        element: <Sign />,
+        element: <Sign />
       },
       {
         path: "/login",
-        element: <Login />,
-      },
-    ],
+        element: <Login />
+      }
+    ]
   },
   { path: "/detail", element: <Detail /> },
-  { path: "/newslist", element: <NewsList /> },
+  { path: "/newslist", element: <NewsList /> }
 ]);
 
 function App() {

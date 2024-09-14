@@ -38,7 +38,8 @@
   color: #666;
 }
 
-.tableBody .tableCell:nth-child(2) {
+.tableBody .tableCell:nth-child(2),
+.tableBody .tableCell:nth-child(5) {
   color: #222;
 }
 
@@ -49,7 +50,8 @@
   color: #222;
 }
 
-.tableCell:nth-child(1) {
+.tableCell:nth-child(1),
+.tableCell:nth-child(5) {
   flex: 0.5;
 }
 
@@ -62,12 +64,16 @@
   flex: 0.7;
 }
 
-/* .tableCell:nth-child(3) {
-  flex: 3;
-  text-align: left;
-  justify-content: flex-start;
-} */
-
 .cellContent {
   cursor: pointer;
+}
+
+.noPosts {
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
 }

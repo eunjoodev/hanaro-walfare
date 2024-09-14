@@ -78,13 +78,13 @@ const NewsList = () => {
     console.log(`Search count for ${value}: ${searchCounts[value] || 0}`);
   };
 
-  const handleArticleClick = async (article) => {
-    const { data, error } = await supabase
-      .from("click_data")
-      .insert([{ article_id: article.id }]);
+  // const handleArticleClick = async (article) => {
+  //   const { data, error } = await supabase
+  //     .from("click_data")
+  //     .insert([{ article_id: article.id }]);
 
-    if (error) console.error("Error saving click data:", error);
-  };
+  //   if (error) console.error("Error saving click data:", error);
+  // };
 
   const handleSearchSubmit = (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
@@ -94,14 +94,14 @@ const NewsList = () => {
   const filteredArticles = articles.filter(
     (article) =>
       article.title &&
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()),
+      article.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastArticle = currentPage * PAGE_SIZE;
   const indexOfFirstArticle = indexOfLastArticle - PAGE_SIZE;
   const currentArticles = filteredArticles.slice(
     indexOfFirstArticle,
-    indexOfLastArticle,
+    indexOfLastArticle
   );
 
   return (
@@ -141,7 +141,7 @@ const NewsList = () => {
                     {currentArticles.map((article) => (
                       <tr
                         key={article.id}
-                        onClick={() => handleArticleClick(article)}
+                        // onClick={() => handleArticleClick(article)}
                       >
                         <td>{article.id}</td>
                         <td>{article.title || "N/A"}</td>
