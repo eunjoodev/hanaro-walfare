@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "./FilterComponent.module.css";
-import backendUrl from "../../config";
 
 const FilterComponent = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
