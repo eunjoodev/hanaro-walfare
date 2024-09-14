@@ -1,0 +1,65 @@
+
+
+  .pageContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .contentWrap {
+    flex: 1;
+  }
+
+  .newsListContainer {
+    padding: 20px;
+    margin-bottom: 50px; 
+    flex-grow: 1; 
+    
+  }
+
+  .newsTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .newsTable th,
+  .newsTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  .newsTable th {
+    background-color: #f2f2f2;
+  }
+
+  .searchBar {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+  }
+
+.searchForm {
+  display: flex;
+  align-items: center;
+}
+
+.searchBar {
+  flex-grow: 1; /* 검색창이 공간을 꽉 차게 함 */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.searchButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.searchButton img {
+  width: 30px; /* 아이콘 크기 조정 */
+  height: auto;
+}
+

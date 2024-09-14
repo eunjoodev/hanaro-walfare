@@ -41,6 +41,7 @@
 
 .postContent {
   padding: 20px;
+  min-height: 250px;
 }
 
 .postBtnBox {

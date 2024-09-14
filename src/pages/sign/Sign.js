@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styles from "./Sign.module.css";
 import Modal from "../../components/common/modal/Modal";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const API_URL = "";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 const Sign = () => {
   const [userData, setUserData] = useState({
-    id: "",
+    uid: "",
     name: "",
     password: "",
     password_check: "",
@@ -17,9 +19,15 @@ const Sign = () => {
   const [isValidId, setIsValidId] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
   const [isValidPasswordCheck, setIsValidPasswordCheck] = useState(true);
+  const [isCheckedData, setIsCheckedData] = useState({
+    uid: false,
+    email: false,
+  });
 
   const [isOpen, setIsOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const openModal = (message) => {
     setModalMessage(message);
@@ -35,7 +43,7 @@ const Sign = () => {
     let isChecked;
 
     switch (name) {
-      case "id":
+      case "uid":
         const idCheck = /^[a-zA-Z0-9]{8,}$/;
         isChecked = idCheck.test(value);
         setIsValidId(isChecked);
@@ -55,25 +63,25 @@ const Sign = () => {
     return isChecked;
   };
 
-  const handleCheck = async (name) => {
-    const value = userData[name];
+  //중복 확인
+  const handleCheck = async (title) => {
+    const value = userData[title];
     if (!value) {
       openModal("값을 입력해 주세요.");
       return;
     }
-
+    const pathName = title === "uid" ? "id" : "email";
     try {
-      const response = await fetch(`${API_URL}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: { [name]: value },
+      const response = await axios.post(`${API_URL}/auth/${pathName}`, {
+        [title]: value,
       });
 
-      const data = await response.json();
-      if (data.isAvailable) {
+      if (response.status === 200) {
         openModal("사용 가능합니다.");
+        setIsCheckedData((prev) => ({
+          ...prev,
+          [title]: true,
+        }));
       } else {
         openModal("이미 사용중입니다.");
       }
@@ -85,11 +93,15 @@ const Sign = () => {
   const changeHandler = (event) => {
     const { name, value } = event.target;
 
-    validInput(name, value);
+    let setValue = value;
+    if (name === "phone_number") {
+      setValue = value.replace(/[^0-9]/g, "");
+    }
+    validInput(name, setValue);
 
     setUserData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: setValue,
     }));
   };
 
@@ -102,33 +114,25 @@ const Sign = () => {
       return;
     }
 
-    const sendUserData = {
-      uid: userData.id,
-      name: userData.name,
-      password: userData.password,
-      password_check: userData.password_check,
-      email: userData.email,
-      birthday: userData.birthday,
-      phone_number: userData.phone_number,
-      area: userData.area,
-    };
-
     try {
-      const response = await fetch(`${API_URL}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: sendUserData,
+      const response = await axios.post(`${API_URL}/auth/sign-up`, {
+        uid: userData.uid,
+        name: userData.name,
+        password: userData.password,
+        password_check: userData.password_check,
+        email: userData.email,
+        birthday: userData.birthday,
+        phone_number: userData.phone_number,
+        area: userData.area,
       });
 
-      if (!response.ok) {
-        throw new Error("네트워크 응답이 올바르지 않습니다.");
+      if (response.status === 200) {
+        console.log("회원가입 성공:", response.data);
+        openModal("회원가입이 완료되었습니다.");
+        navigate("/login");
+      } else {
+        openModal("회원가입에 실패했습니다.");
       }
-
-      const result = await response.json();
-      console.log("회원가입 성공:", result);
-      openModal("회원가입이 완료되었습니다.");
     } catch (error) {
       console.error("회원가입 실패:", error);
       openModal("회원가입에 실패했습니다.");
@@ -143,12 +147,12 @@ const Sign = () => {
           <h1 className={styles.formtitle}>회원가입</h1>
           <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
-              <label htmlFor="id">아이디</label>
+              <label htmlFor="uid">아이디</label>
               <div className={styles.formGroupValid}>
                 <input
                   type="text"
-                  id="id"
-                  name="id"
+                  id="uid"
+                  name="uid"
                   onChange={changeHandler}
                   className={
                     !isValidId ? styles.vaildInput : styles.formGroupinput
@@ -164,7 +168,7 @@ const Sign = () => {
                 <button
                   type="button"
                   className={styles.checkButton}
-                  onClick={() => handleCheck("id")}
+                  onClick={() => handleCheck("uid")}
                 >
                   중복확인
                 </button>
@@ -255,7 +259,7 @@ const Sign = () => {
             <div className={styles.formGroup}>
               <label htmlFor="phone_number">연락처</label>
               <input
-                type="number"
+                type="text"
                 id="phone_number"
                 name="phone_number"
                 placeholder="010-1234-5678"

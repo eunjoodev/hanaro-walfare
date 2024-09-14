@@ -18,15 +18,20 @@ const FilterComponent = ({ onFilterChange }) => {
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
-        const response = await fetch(`${backendUrl}/main/target-list`);
+        // const response = await fetch(`${backendUrl}/main/target-list`);
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/main/target-list`
+        );
+
         if (!response.ok) {
           throw new Error("Failed to fetch filter options");
         }
         const data = await response.json();
+        console.log("Filter API Response:", data);
         setFilterOptions({
-          userTypes: data.data.userTypes || [],
-          applicationMethods: data.data.applicationMethods || [],
-          serviceFields: data.data.serviceFields || []
+          userTypes: data.data.userType || [],
+          applicationMethods: data.data.applicationMethod || [],
+          serviceFields: data.data.serviceFiled || []
         });
       } catch (error) {
         console.error("Failed to fetch filter options", error);
@@ -36,12 +41,10 @@ const FilterComponent = ({ onFilterChange }) => {
     fetchFilterOptions();
   }, []);
 
-  // 필터 값이 변경될 때 상위 컴포넌트에 변경 알림
   useEffect(() => {
     onFilterChange(filters);
   }, [filters, onFilterChange]);
 
-  // 필터 핸들러
   const handleUserTypeChange = (e) => {
     setFilters((prev) => ({
       ...prev,

@@ -3,8 +3,10 @@ import styles from "./Login.module.css";
 import OAuth from "../../components/sociallogin/OAuth";
 import { useRecoilState } from "recoil";
 import { authState } from "../../states/Auth";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const API_URL = "";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 const Login = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loginData, setLoginData] = useState({
@@ -16,7 +18,7 @@ const Login = () => {
   });
 
   const [auth, setAuth] = useRecoilState(authState);
-
+  const navigate = useNavigate();
   const openModal = () => {
     setIsOpen(true);
   };
@@ -27,7 +29,6 @@ const Login = () => {
   const changeHandler = (event) => {
     const { name, value } = event.target;
 
-    console.log(name, value);
     setLoginData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -41,19 +42,17 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: { id: loginData.findId, password: loginData.newPassword },
+      const response = await axios.put(`${API_URL}/auth/password`, {
+        uid: loginData.findId,
+        new_password: loginData.newPassword,
+        new_password_check: loginData.passwordCheck,
       });
-      if (!response.ok) {
+      if (response.status === 200) {
+        alert("비밀번호가 성공적으로 변경되었습니다.");
+        closeModal();
+      } else {
         throw new Error("비밀번호 변경 실패");
       }
-
-      alert("비밀번호가 성공적으로 변경되었습니다.");
-      closeModal();
     } catch (error) {
       console.error("비밀번호 변경 실패", error);
       alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
@@ -68,33 +67,28 @@ const Login = () => {
       password: loginData.password,
     };
 
+    console.log(API_URL);
     try {
-      const response = await fetch(`${API_URL}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: sendLoginData,
-      });
+      const response = await axios.post(`${API_URL}/auth/login`, sendLoginData);
+      if (response.status === 200) {
+        const { accessToken } = response.data;
 
-      if (!response.ok) {
+        if (accessToken) {
+          localStorage.setItem("token", accessToken);
+          setAuth({
+            id: loginData.id,
+            isLoggedIn: true,
+            token: accessToken,
+          });
+
+          console.log("로그인 성공");
+          navigate("/");
+        } else {
+          console.log("토큰이 없습니다.");
+        }
+      } else {
         throw new Error("로그인 실패");
       }
-
-      const data = await response.json();
-      const { token } = data;
-      // const { accessToken,refreshToken } = data;
-
-      setAuth({
-        isLoggedIn: true,
-        token: token,
-      });
-
-      localStorage.setItem("token", token);
-      // localStorage.setItem("accessToken", accessToken);
-      // localStorage.setItem("refreshToken", refreshToken);
-
-      console.log("로그인 성공");
     } catch (error) {
       console.error("로그인 실패", error);
     }
