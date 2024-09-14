@@ -78,13 +78,13 @@ const NewsList = () => {
     console.log(`Search count for ${value}: ${searchCounts[value] || 0}`);
   };
 
-  // const handleArticleClick = async (article) => {
-  //   const { data, error } = await supabase
-  //     .from("click_data")
-  //     .insert([{ article_id: article.id }]);
+  const handleArticleClick = async (article) => {
+    const { data, error } = await supabase
+      .from("click_data")
+      .insert([{ article_id: article.id }]);
 
-  //   if (error) console.error("Error saving click data:", error);
-  // };
+    if (error) console.error("Error saving click data:", error);
+  };
 
   const handleSearchSubmit = (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
@@ -141,7 +141,7 @@ const NewsList = () => {
                     {currentArticles.map((article) => (
                       <tr
                         key={article.id}
-                        // onClick={() => handleArticleClick(article)}
+                        onClick={() => handleArticleClick(article)}
                       >
                         <td>{article.id}</td>
                         <td>{article.title || "N/A"}</td>
