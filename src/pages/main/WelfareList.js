@@ -28,7 +28,14 @@ const WelfareList = () => {
     });
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/main?${query.toString()}`);
+      // 환경변수에 따라 다른 프록시 및 백엔드 URL 사용
+      const env = process.env.REACT_APP_ENV || 'development';
+      const apiUrl =
+        env === 'production'
+          ? `${process.env.REACT_APP_PROXY_URL}/main?${query.toString()}`
+          : `${process.env.REACT_APP_BACKEND_URL}/main?${query.toString()}`;
+
+      const response = await fetch(apiUrl);
       const data = await response.json();
       console.log("API 응답 데이터:", data);
       setWelfareItems(data.data.content);
@@ -65,13 +72,11 @@ const WelfareList = () => {
         setLayout={setLayout}
       />
 
-      <div
-        className={
-          layout === "grid"
-            ? styles.welfareListContainer
-            : styles.welfareListContainerList
-        }
-      >
+      <div className={
+        layout === "grid"
+          ? styles.welfareListContainer
+          : styles.welfareListContainerList
+      }>
         {welfareItems.length > 0 ? (
           welfareItems.map((item, index) => (
             <WelfareBox key={index} item={item} layout={layout} />
