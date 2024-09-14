@@ -32,7 +32,7 @@ const initialComments = {
 function Post() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { id, title, content, userId, date } = location.state;
+  const { id, title, content, userId, date, attachments = [] } = location.state;
 
   const [comments, setComments] = useState(initialComments[id] || []);
 
@@ -76,6 +76,20 @@ function Post() {
           <div>게시날짜: {date}</div>
         </div>
         <div className={styles.postContent}>{content}</div>
+        {attachments.length > 0 && (
+          <div className={styles.attachments}>
+            <h4>첨부파일</h4>
+            <ul>
+              {attachments.map((file, index) => (
+                <li key={index}>
+                  <a href={file.url} download={file.name}>
+                    {file.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div className={styles.postBtnBox}>
         <div className={styles.postEditBtnBox}>
