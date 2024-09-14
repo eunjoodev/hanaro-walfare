@@ -26,16 +26,20 @@ const Sign = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-
+  const [formSuccessed, setFormSuccessed] = useState(false);
   const navigate = useNavigate();
 
   const openModal = (message) => {
     setModalMessage(message);
+
     setIsOpen(true);
   };
   const closeModal = () => {
     setIsOpen(false);
     setModalMessage("");
+    if (formSuccessed === true) {
+      navigate("/login");
+    }
   };
 
   //유효성 검사를 위한 함수
@@ -76,7 +80,7 @@ const Sign = () => {
         [title]: value,
       });
 
-      if (response.status === 200) {
+      if (response.data.code === 200) {
         openModal("사용 가능합니다.");
         setIsCheckedData((prev) => ({
           ...prev,
@@ -107,10 +111,14 @@ const Sign = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(userData);
+    console.log(isCheckedData);
 
     if (!isValidId || !isValidPassword || !isValidPasswordCheck) {
       openModal("입력 정보를 확인해주세요.");
+      return;
+    }
+    if (!isCheckedData.uid || !isCheckedData.email) {
+      openModal("중복확인을 해주세요");
       return;
     }
 
@@ -127,9 +135,13 @@ const Sign = () => {
       });
 
       if (response.status === 200) {
+        setFormSuccessed(true);
         console.log("회원가입 성공:", response.data);
         openModal("회원가입이 완료되었습니다.");
-        navigate("/login");
+
+        if (isOpen === true) {
+          navigate("/login");
+        }
       } else {
         openModal("회원가입에 실패했습니다.");
       }
@@ -157,6 +169,7 @@ const Sign = () => {
                   className={
                     !isValidId ? styles.vaildInput : styles.formGroupinput
                   }
+                  required
                 />
                 {!isValidId && (
                   <div className={styles.vaildError}>
@@ -182,6 +195,7 @@ const Sign = () => {
                 name="name"
                 onChange={changeHandler}
                 className={styles.formGroupinput}
+                required
               />
               <div className={styles.formGroupButton}></div>
             </div>
@@ -194,6 +208,7 @@ const Sign = () => {
                 onChange={changeHandler}
                 className={styles.formGroupinput}
                 placeholder="YYYY-MM-DD"
+                required
               />
               <div className={styles.formGroupButton}></div>
             </div>
@@ -205,6 +220,7 @@ const Sign = () => {
                 name="email"
                 onChange={changeHandler}
                 className={styles.formGroupinput}
+                required
               />
               <div className={styles.formGroupButton}>
                 <button
@@ -227,6 +243,7 @@ const Sign = () => {
                   className={
                     !isValidPassword ? styles.vaildInput : styles.formGroupinput
                   }
+                  required
                 />
                 {!isValidPassword && (
                   <div className={styles.vaildError}>
@@ -247,6 +264,7 @@ const Sign = () => {
                   className={
                     !isValidPassword ? styles.vaildInput : styles.formGroupinput
                   }
+                  required
                 />
                 {!isValidPasswordCheck && (
                   <div className={styles.vaildError}>
@@ -265,6 +283,7 @@ const Sign = () => {
                 placeholder="010-1234-5678"
                 onChange={changeHandler}
                 className={styles.formGroupinput}
+                required
               />
               <div className={styles.formGroupButton}></div>
             </div>
@@ -276,6 +295,7 @@ const Sign = () => {
                 name="area"
                 onChange={changeHandler}
                 className={styles.formGroupinput}
+                required
               />
               <div className={styles.formGroupButton}></div>
             </div>
