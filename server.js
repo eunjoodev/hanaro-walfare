@@ -12,7 +12,7 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: function (origin, callbac   ) { 
+  origin: function (origin, callback ) { 
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
