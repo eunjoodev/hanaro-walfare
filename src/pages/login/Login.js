@@ -6,7 +6,6 @@ import { authState } from "../../states/Auth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
 const Login = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loginData, setLoginData] = useState({
@@ -19,21 +18,20 @@ const Login = () => {
 
   const [auth, setAuth] = useRecoilState(authState);
   const navigate = useNavigate();
-  const openModal = () => {
-    setIsOpen(true);
-  };
-  const closeModal = () => {
-    setIsOpen(false);
-  };
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   const changeHandler = (event) => {
     const { name, value } = event.target;
-
-    setLoginData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setLoginData((prevData) => ({ ...prevData, [name]: value }));
   };
+
+  // 환경 변수에 따라 다른 프록시 및 백엔드 URL 사용
+  const env = process.env.REACT_APP_ENV || "development";
+  const API_URL = env === "production"
+    ? process.env.REACT_APP_PROXY_URL
+    : process.env.REACT_APP_BACKEND_URL;
 
   const handlePasswordChange = async () => {
     if (loginData.newPassword !== loginData.passwordCheck) {
@@ -55,7 +53,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error("비밀번호 변경 실패", error);
-      alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
+        alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -67,7 +65,6 @@ const Login = () => {
       password: loginData.password,
     };
 
-    console.log(API_URL);
     try {
       const response = await axios.post(`${API_URL}/auth/login`, sendLoginData);
       if (response.status === 200) {
@@ -80,8 +77,6 @@ const Login = () => {
             isLoggedIn: true,
             token: accessToken,
           });
-
-          console.log("로그인 성공");
           navigate("/");
         } else {
           console.log("토큰이 없습니다.");
@@ -91,6 +86,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error("로그인 실패", error);
+      alert("로그인에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -126,13 +122,14 @@ const Login = () => {
           />
         </div>
         <div className={styles.modalButtons}>
-          <button
-            className={styles.submitButton}
-            onClick={handlePasswordChange}
-          >
+          <button 
+            className={styles.submitButton} 
+            onClick={handlePasswordChange}>
             제출
           </button>
-          <button className={styles.closeButton} onClick={closeModal}>
+          <button 
+            className={styles.closeButton} 
+            onClick={closeModal}>
             닫기
           </button>
         </div>
@@ -163,10 +160,14 @@ const Login = () => {
               onChange={changeHandler}
             />
           </div>
-          <button className={styles.loginButton} onClick={handleSubmit}>
+          <button 
+            className={styles.loginButton} 
+            onClick={handleSubmit}>
             로그인
           </button>
-          <button className={styles.findPassword} onClick={openModal}>
+          <button 
+            className={styles.findPassword} 
+            onClick={openModal}>
             비밀번호 찾기
           </button>
         </div>
