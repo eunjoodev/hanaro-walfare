@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   "http://localhost:3000", 
   "https://hanaro-walfare1.vercel.app",
-  "https://hanaro-walfare.vercel.app"
+  "https://hanaro-walfare.vercel.app",
+  "https://hanaro-walfare-qlle12.vercel.app/",
+
 ];
 
 const corsOptions = {
