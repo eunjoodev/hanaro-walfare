@@ -3,7 +3,6 @@ import styles from "./WelfareList.module.css";
 import WelfareListHeader from "./WelfareListHeader";
 import WelfareBox from "./WelfareBox";
 import FilterComponent from "./FilterComponent";
-import backendUrl from "../../config";
 
 const WelfareList = () => {
   const [filters, setFilters] = useState({
@@ -29,7 +28,7 @@ const WelfareList = () => {
     });
 
     try {
-      const response = await fetch(`${backendUrl}/main?${query.toString()}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/main?${query.toString()}`);
       const data = await response.json();
       console.log("API 응답 데이터:", data);
       setWelfareItems(data.data.content);
