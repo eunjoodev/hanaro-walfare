@@ -11,8 +11,11 @@ const KeyBenefits = () => {
   useEffect(() => {
     const fetchBenefits = async () => {
       try {
-        // 프록시 URL 설정
-        const apiUrl = `/api/proxy/main?page=0&size=6`;
+        const env = process.env.REACT_APP_ENV || "development";
+        const apiUrl =
+          env === "production"
+            ? `${process.env.REACT_APP_PROXY_URL}/main?page=0&size=6`
+            : `${process.env.REACT_APP_BACKEND_URL}/main?page=0&size=6`;
 
         const response = await fetch(apiUrl);
         const data = await response.json();
