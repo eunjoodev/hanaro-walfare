@@ -27,7 +27,6 @@ const Login = () => {
     setLoginData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // 환경 변수에 따라 다른 프록시 및 백엔드 URL 사용
   const env = process.env.REACT_APP_ENV || "development";
   const API_URL = env === "production"
     ? process.env.REACT_APP_PROXY_URL
@@ -53,7 +52,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error("비밀번호 변경 실패", error);
-        alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
+      alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
     }
   };
 

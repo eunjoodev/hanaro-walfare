@@ -4,7 +4,6 @@ import Modal from "../../components/common/modal/Modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
 const Sign = () => {
   const [userData, setUserData] = useState({
     uid: "",
@@ -31,18 +30,24 @@ const Sign = () => {
 
   const openModal = (message) => {
     setModalMessage(message);
-
     setIsOpen(true);
   };
+
   const closeModal = () => {
     setIsOpen(false);
     setModalMessage("");
-    if (formSuccessed === true) {
+    if (formSuccessed) {
       navigate("/login");
     }
   };
 
-  //유효성 검사를 위한 함수
+  // 환경 변수에 따라 다른 프록시 및 백엔드 URL 사용
+  const env = process.env.REACT_APP_ENV || "development";
+  const API_URL = env === "production"
+    ? process.env.REACT_APP_PROXY_URL
+    : process.env.REACT_APP_BACKEND_URL;
+
+  // 유효성 검사를 위한 함수
   const validInput = (name, value) => {
     let isChecked;
 
@@ -67,7 +72,7 @@ const Sign = () => {
     return isChecked;
   };
 
-  //중복 확인
+  // 중복 확인
   const handleCheck = async (title) => {
     const value = userData[title];
     if (!value) {
@@ -111,8 +116,6 @@ const Sign = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(isCheckedData);
-
     if (!isValidId || !isValidPassword || !isValidPasswordCheck) {
       openModal("입력 정보를 확인해주세요.");
       return;
@@ -136,10 +139,8 @@ const Sign = () => {
 
       if (response.status === 200) {
         setFormSuccessed(true);
-        console.log("회원가입 성공:", response.data);
         openModal("회원가입이 완료되었습니다.");
-
-        if (isOpen === true) {
+        if (isOpen) {
           navigate("/login");
         }
       } else {
@@ -262,7 +263,9 @@ const Sign = () => {
                   name="password_check"
                   onChange={changeHandler}
                   className={
-                    !isValidPassword ? styles.vaildInput : styles.formGroupinput
+                    !isValidPasswordCheck
+                      ? styles.vaildInput
+                      : styles.formGroupinput
                   }
                   required
                 />
