@@ -9,6 +9,6 @@ export default async (req, res) => {
 
     res.status(response.status).json(data);
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong.' });
+    res.status(500).json({ error: 'Something went wrong check this.' });
   }
 };
