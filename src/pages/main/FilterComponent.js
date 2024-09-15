@@ -17,10 +17,14 @@ const FilterComponent = ({ onFilterChange }) => {
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
-        // const response = await fetch(`${backendUrl}/main/target-list`);
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/main/target-list`
-        );
+        // 환경변수에 따라 다른 프록시 및 백엔드 URL 사용
+        const env = process.env.REACT_APP_ENV || "development";
+        const apiUrl =
+          env === "production"
+            ? `${process.env.REACT_APP_PROXY_URL}/main/target-list`
+            : `${process.env.REACT_APP_BACKEND_URL}/main/target-list`;
+
+        const response = await fetch(apiUrl);
 
         if (!response.ok) {
           throw new Error("Failed to fetch filter options");
