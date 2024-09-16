@@ -1,43 +1,46 @@
+.pageContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
+.contentWrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
 
-  .pageContainer {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+.newsListContainer {
+  padding: 20px;
+  margin-bottom: 120px;
+  margin-top: 20px;
+  flex-grow: 1;
+}
 
-  .contentWrap {
-    flex: 1;
-  }
+.newsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 60px;
+}
 
-  .newsListContainer {
-    padding: 20px;
-    margin-bottom: 50px; 
-    flex-grow: 1; 
-    
-  }
+.newsTable th,
+.newsTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
 
-  .newsTable {
-    width: 100%;
-    border-collapse: collapse;
-  }
+.newsTable th {
+  background-color: #f2f2f2;
+}
 
-  .newsTable th,
-  .newsTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-
-  .newsTable th {
-    background-color: #f2f2f2;
-  }
-
-  .searchBar {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-  }
+.searchBar {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
 
 .searchForm {
   display: flex;
@@ -45,7 +48,7 @@
 }
 
 .searchBar {
-  flex-grow: 1; /* 검색창이 공간을 꽉 차게 함 */
+  flex-grow: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -62,4 +65,3 @@
   width: 30px; /* 아이콘 크기 조정 */
   height: auto;
 }
-
