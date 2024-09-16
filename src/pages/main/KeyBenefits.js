@@ -55,7 +55,7 @@ const KeyBenefits = () => {
     if (benefitBoxes.length > 0) {
       setCurrentIndex(
         (prevIndex) =>
-          (prevIndex - 1 + benefitBoxes.length) % benefitBoxes.length,
+          (prevIndex - 1 + benefitBoxes.length) % benefitBoxes.length
       );
     }
   };
@@ -80,7 +80,7 @@ const KeyBenefits = () => {
           <p>신청 기한: {benefitBoxes[index].applicationDeadline}</p>
           <p>신청 방법: {benefitBoxes[index].applicationMethod}</p>
           <p>설명: {benefitBoxes[index].servicePurposeSummary}</p>
-        </a>,
+        </a>
       );
     }
     return boxesToShow;
