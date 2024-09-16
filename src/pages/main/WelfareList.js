@@ -8,7 +8,7 @@ const WelfareList = () => {
   const [filters, setFilters] = useState({
     userType: "",
     applicationMethod: "",
-    serviceFields: []
+    serviceFields: [],
   });
 
   const [welfareItems, setWelfareItems] = useState([]);
@@ -24,14 +24,13 @@ const WelfareList = () => {
       "application-method": filters.applicationMethod || "",
       "service-field": filters.serviceFields.join(","),
       page: page.toString(),
-      size: itemsPerPage.toString()
+      size: itemsPerPage.toString(),
     });
 
     try {
-      // 환경변수에 따라 다른 프록시 및 백엔드 URL 사용
-      const env = process.env.REACT_APP_ENV || 'development';
+      const env = process.env.REACT_APP_ENV || "development";
       const apiUrl =
-        env === 'production'
+        env === "production"
           ? `${process.env.REACT_APP_PROXY_URL}/main?${query.toString()}`
           : `${process.env.REACT_APP_BACKEND_URL}/main?${query.toString()}`;
 
@@ -72,11 +71,13 @@ const WelfareList = () => {
         setLayout={setLayout}
       />
 
-      <div className={
-        layout === "grid"
-          ? styles.welfareListContainer
-          : styles.welfareListContainerList
-      }>
+      <div
+        className={
+          layout === "grid"
+            ? styles.welfareListContainer
+            : styles.welfareListContainerList
+        }
+      >
         {welfareItems.length > 0 ? (
           welfareItems.map((item, index) => (
             <WelfareBox key={index} item={item} layout={layout} />
