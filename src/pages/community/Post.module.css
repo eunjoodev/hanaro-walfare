@@ -41,6 +41,35 @@
 
 .postContent {
   padding: 20px;
+  min-height: 250px;
+}
+
+.attachments {
+  padding: 20px;
+  border-top: 1px solid var(--border-color2);
+}
+
+.attachments h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.attachments ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.attachments li {
+  margin-bottom: 8px;
+}
+
+.attachments a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.attachments a:hover {
+  text-decoration: underline;
 }
 
 .postBtnBox {

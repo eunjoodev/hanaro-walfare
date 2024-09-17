@@ -20,11 +20,6 @@
 .title,
 .content {
   font-size: 20px;
-  /* display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px 0;
-  background-color: #f7f7f7; */
 }
 
 .titleInput {
@@ -42,6 +37,20 @@
 
 .quill {
   height: 300px;
+}
+
+.fileLabel {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.fileInput {
+  width: 935px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .submitButton {
