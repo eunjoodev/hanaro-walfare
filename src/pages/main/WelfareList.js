@@ -99,14 +99,19 @@ const WelfareList = () => {
         <p>로딩 중...</p>
       ) : (
         <div className={layout === "grid" ? styles.welfareListContainer : styles.welfareListContainerList}>
-          {welfareItems.length > 0 ? (
-            welfareItems.map((item, index) => (
-              <WelfareBox key={index} item={item} layout={layout} />
-            ))
-          ) : (
-            <p>복지 혜택이 없습니다.</p>
-          )}
-        </div>
+        {welfareItems.length > 0 ? (
+          welfareItems.map((item, index) => (
+            <WelfareBox 
+              key={`welfare-${index}-${item.serviceName}`} 
+              item={item} 
+              layout={layout} 
+              index={index}
+            />
+          ))
+        ) : (
+          <p>복지 혜택이 없습니다.</p>
+        )}
+      </div>
       )}
       <div className={styles.pagination}>
         {page > 1 && (

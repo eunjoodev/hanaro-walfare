@@ -2,15 +2,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./WelfareBox.module.css";
 
-const WelfareBox = ({ item, layout }) => {
+const WelfareBox = ({ item, layout, index }) => {
   const navigate = useNavigate();
 
   const handleDetailClick = () => {
-    navigate(`/detail/${encodeURIComponent(item.serviceName)}`);
+    if (item.serviceName) {
+      const encodedServiceName = encodeURIComponent(item.serviceName.replace(/\s/g, ''));
+      navigate(`/welfare/detail/${encodedServiceName}`);
+    } else {
+      console.error("Service name is missing");
+    }
   };
-
+  
+  
   return (
-    <div className={layout === "grid" ? styles.gridItem : styles.listItem}>
+    <div key={`welfare-${index}`} className={layout === "grid" ? styles.gridItem : styles.listItem}>
       <div className={styles.contentContainer}>
         <div className={styles.tag}>{item.supervisingAgencyName}</div>
         <div className={styles.title}>{item.serviceName}</div>
