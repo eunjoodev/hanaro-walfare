@@ -6,7 +6,7 @@ const WelfareBox = ({ item, layout }) => {
   const navigate = useNavigate();
 
   const handleDetailClick = () => {
-    navigate(`/detail/${item.id}`);
+    navigate(`/detail/${encodeURIComponent(item.serviceName)}`);
   };
 
   return (
