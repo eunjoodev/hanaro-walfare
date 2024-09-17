@@ -3,13 +3,12 @@ import styles from "./WelfareList.module.css";
 import WelfareListHeader from "./WelfareListHeader";
 import WelfareBox from "./WelfareBox";
 import FilterComponent from "./FilterComponent";
-import backendUrl from "../../config";
 
 const WelfareList = () => {
   const [filters, setFilters] = useState({
     userType: "",
     applicationMethod: "",
-    serviceFields: []
+    serviceFields: [],
   });
 
   const [welfareItems, setWelfareItems] = useState([]);
@@ -25,11 +24,17 @@ const WelfareList = () => {
       "application-method": filters.applicationMethod || "",
       "service-field": filters.serviceFields.join(","),
       page: page.toString(),
-      size: itemsPerPage.toString()
+      size: itemsPerPage.toString(),
     });
 
     try {
-      const response = await fetch(`${backendUrl}/main?${query.toString()}`);
+      const env = process.env.REACT_APP_ENV || "development";
+      const apiUrl =
+        env === "production"
+          ? `${process.env.REACT_APP_PROXY_URL}/main?${query.toString()}`
+          : `${process.env.REACT_APP_BACKEND_URL}/main?${query.toString()}`;
+
+      const response = await fetch(apiUrl);
       const data = await response.json();
       console.log("API 응답 데이터:", data);
       setWelfareItems(data.data.content);

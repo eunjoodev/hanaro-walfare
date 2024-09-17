@@ -6,11 +6,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = [
-  "https://hanaro-walfare.vercel.app/",
+  "http://localhost:3000", 
+  "https://hanaro-walfare1.vercel.app",
+  "https://hanaro-walfare.vercel.app",
+  "https://hanaro-walfare-qlle12.vercel.app/",
+
 ];
 
 const corsOptions = {
-  origin: function (origin, callback) {
+  origin: function (origin, callback ) { 
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {

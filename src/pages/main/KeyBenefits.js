@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "./KeyBenefits.module.css";
-import backendUrl from "../../config";
 
 const KeyBenefits = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -8,15 +7,30 @@ const KeyBenefits = () => {
   const [benefitBoxes, setBenefitBoxes] = useState([]);
 
   const visibleBoxes = 3;
+  const imageUrls = [
+    "/assets/KeyBenefitsImage/KeyBenefits01.jpg",
+    "/assets/KeyBenefitsImage/KeyBenefits02.jpg",
+    "/assets/KeyBenefitsImage/KeyBenefits03.jpg",
+    "/assets/KeyBenefitsImage/KeyBenefits04.jpg",
+    "/assets/KeyBenefitsImage/KeyBenefits05.jpg",
+    "/assets/KeyBenefitsImage/KeyBenefits06.jpg",
+  ];
 
   useEffect(() => {
     const fetchBenefits = async () => {
       try {
-        const response = await fetch(`${backendUrl}/main?page=0&size=6`);
+        const env = process.env.REACT_APP_ENV || "development";
+        const apiUrl =
+          env === "production"
+            ? `${process.env.REACT_APP_PROXY_URL}/main?page=0&size=6`
+            : `${process.env.REACT_APP_BACKEND_URL}/main?page=0&size=6`;
+
+        const response = await fetch(apiUrl);
         const data = await response.json();
         console.log("API 응답 데이터:", data);
         if (data && data.data) {
-          setBenefitBoxes(data.data.content || []);
+          setBenefitBoxes(data.data.content.slice(0, 6));
+          // setBenefitBoxes(data.data.content || []);
         } else {
           console.error("Unexpected response structure", data);
         }
@@ -35,7 +49,7 @@ const KeyBenefits = () => {
     if (!isPaused) {
       interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % benefitBoxes.length);
-      }, 3000);
+      }, 3800);
     }
     return () => clearInterval(interval);
   }, [isPaused, currentIndex, benefitBoxes.length]);
@@ -50,7 +64,7 @@ const KeyBenefits = () => {
     if (benefitBoxes.length > 0) {
       setCurrentIndex(
         (prevIndex) =>
-          (prevIndex - 1 + benefitBoxes.length) % benefitBoxes.length,
+          (prevIndex - 1 + benefitBoxes.length) % benefitBoxes.length
       );
     }
   };
@@ -64,18 +78,24 @@ const KeyBenefits = () => {
     for (let i = 0; i < visibleBoxes; i++) {
       const index = (currentIndex + i) % benefitBoxes.length;
       boxesToShow.push(
-        <a
-          href="/detail"
-          className={styles.benefitBox}
-          key={benefitBoxes[index].id}
-        >
-          <h3>{benefitBoxes[index].serviceName}</h3>
-          <p>분야: {benefitBoxes[index].serviceField}</p>
-          <p>기관: {benefitBoxes[index].supervisingAgencyName}</p>
-          <p>신청 기한: {benefitBoxes[index].applicationDeadline}</p>
-          <p>신청 방법: {benefitBoxes[index].applicationMethod}</p>
-          <p>설명: {benefitBoxes[index].servicePurposeSummary}</p>
-        </a>,
+        <div className={styles.benefitBox} key={benefitBoxes[index].id}>
+          <div className={styles.imageContainer}>
+            <img
+              src={imageUrls[index]}
+              alt="복지 이미지"
+              className={styles.benefitImage}
+            />
+          </div>
+          <div className={styles.textContainer}>
+            <h3 className={styles.benefitTitle}>
+              [{benefitBoxes[index].supervisingAgencyName}]
+              {benefitBoxes[index].serviceName}
+            </h3>
+            <div className={styles.summary}>
+              {benefitBoxes[index].servicePurposeSummary}
+            </div>
+          </div>
+        </div>
       );
     }
     return boxesToShow;
