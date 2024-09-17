@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
-import styles from "./WelfareList.module.css";
-import WelfareListHeader from "./WelfareListHeader";
-import WelfareBox from "./WelfareBox";
-import FilterComponent from "./FilterComponent";
+import React, { useState, useEffect, useCallback } from 'react';
+import styles from './WelfareList.module.css';
+import WelfareListHeader from './WelfareListHeader';
+import WelfareBox from './WelfareBox';
+import FilterComponent from './FilterComponent';
 
 const WelfareList = () => {
   const [filters, setFilters] = useState({
-    userType: "",
-    applicationMethod: "",
+    userType: '',
+    applicationMethod: '',
     serviceFields: []
   });
 
@@ -16,19 +16,21 @@ const WelfareList = () => {
   const [itemsPerPage, setItemsPerPage] = useState(24);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const [layout, setLayout] = useState("grid");
+  const [layout, setLayout] = useState('grid');
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchWelfareItems = useCallback(async () => {
+    setIsLoading(true);
+
     const query = new URLSearchParams({
-      "user-type": filters.userType || "",
-      "application-method": filters.applicationMethod || "",
-      "service-field": filters.serviceFields.join(","),
+      'user-type': filters.userType || '',
+      'application-method': filters.applicationMethod || '',
+      'service-field': filters.serviceFields.join(','),
       page: page.toString(),
       size: itemsPerPage.toString()
     });
 
     try {
-      // 환경변수에 따라 다른 프록시 및 백엔드 URL 사용
       const env = process.env.REACT_APP_ENV || 'development';
       const apiUrl =
         env === 'production'
@@ -37,28 +39,30 @@ const WelfareList = () => {
 
       const response = await fetch(apiUrl);
       const data = await response.json();
-      console.log("API 응답 데이터:", data);
+      console.log('API 응답 데이터:', data);
       setWelfareItems(data.data.content);
       setTotalItems(data.data.totalElements);
       setTotalPages(data.data.totalPages);
     } catch (error) {
-      console.error("Failed to fetch welfare items", error);
+      console.error('Failed to fetch welfare items', error);
+    } finally {
+      setIsLoading(false);
     }
   }, [filters, page, itemsPerPage]);
 
   useEffect(() => {
     fetchWelfareItems();
-  }, [fetchWelfareItems]);
+  }, [fetchWelfareItems, filters, page, itemsPerPage]);
 
-  const handleFilterChange = (newFilters) => {
+  const handleFilterChange = useCallback((newFilters) => {
     setFilters(newFilters);
-    setPage(0);
-  };
+    setPage(0); // 필터 변경 시 페이지를 초기화
+  }, []);
 
-  const handleItemsPerPageChange = (newSize) => {
+  const handleItemsPerPageChange = useCallback((newSize) => {
     setItemsPerPage(newSize);
-    setPage(0);
-  };
+    setPage(0); // 페이지 크기 변경 시 페이지를 초기화
+  }, []);
 
   return (
     <div>
@@ -72,11 +76,13 @@ const WelfareList = () => {
         setLayout={setLayout}
       />
 
-      <div className={
-        layout === "grid"
-          ? styles.welfareListContainer
-          : styles.welfareListContainerList
-      }>
+      <div
+        className={
+          layout === 'grid'
+            ? styles.welfareListContainer
+            : styles.welfareListContainerList
+        }
+      >
         {welfareItems.length > 0 ? (
           welfareItems.map((item, index) => (
             <WelfareBox key={index} item={item} layout={layout} />
@@ -88,10 +94,7 @@ const WelfareList = () => {
 
       <div className={styles.pagination}>
         {page > 0 && (
-          <button
-            onClick={() => setPage(page - 1)}
-            className={styles.pageButton}
-          >
+          <button onClick={() => setPage((prevPage) => Math.max(prevPage - 1, 0))} className={styles.pageButton}>
             이전
           </button>
         )}
@@ -99,14 +102,13 @@ const WelfareList = () => {
           페이지 {page + 1} / {totalPages}
         </span>
         {page < totalPages - 1 && (
-          <button
-            onClick={() => setPage(page + 1)}
-            className={styles.pageButton}
-          >
+          <button onClick={() => setPage((prevPage) => Math.min(prevPage + 1, totalPages - 1))} className={styles.pageButton}>
             다음
           </button>
         )}
       </div>
+
+      {isLoading && <p>Loading...</p>}
     </div>
   );
 };
