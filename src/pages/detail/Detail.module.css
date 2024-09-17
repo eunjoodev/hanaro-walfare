@@ -15,7 +15,7 @@
 
 .contentContainer {
   width: 1280px;       
-  height: 1047px;      
+  min-height: 1047px;
   display: flex;
   margin: 0 auto;      
   padding-bottom: 150px; 
@@ -300,7 +300,6 @@ th {
   border-bottom: 1px solid #ddd;
 }
 
-
 .commentFormContainer {
   border: 1px solid #ccc;
   padding: 20px;
@@ -342,4 +341,43 @@ th {
 .commentSubmitButton:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+.fullDataSection {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.dataTable td, .dataTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  word-break: break-word;
+}
+
+.dataTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.dataTable th {
+  background-color: #f8f8f8;
+  font-weight: bold;
+  text-align: left;
+  padding: 10px 8px;
+}
+
+@media (max-width: 1280px) {
+  .contentContainer {
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .mainContent {
+    width: 100%;
+  }
 }
