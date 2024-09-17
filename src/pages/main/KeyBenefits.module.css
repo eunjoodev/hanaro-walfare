@@ -22,18 +22,49 @@
 
 .benefitBox {
   width: 413px;
-  height: 220px;
-  border: 1px solid #ddd;
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: box-shadow 0.3s ease;
+  flex-direction: column;
 }
 
-.benefitBox:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.12);
+.imageContainer {
+  width: 100%;
+  height: 240px;
+}
+
+.benefitImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.textContainer {
+  padding: 10px;
+  text-align: start;
+  background-color: #f5f8fc;
+  padding: 12px;
+  min-height: 90px;
+}
+
+.benefitTitle {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0;
+  display: flex;
+  justify-content: start;
+  margin-bottom: 8px;
+}
+
+.summary {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+  display: flex;
+  justify-content: start;
+  text-align: start;
+  /* white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; */
 }
 
 .controls {

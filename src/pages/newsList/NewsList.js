@@ -58,14 +58,14 @@ const NewsList = () => {
   const filteredArticles = articles.filter(
     (article) =>
       article.title &&
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()),
+      article.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastArticle = currentPage * PAGE_SIZE;
   const indexOfFirstArticle = indexOfLastArticle - PAGE_SIZE;
   const currentArticles = filteredArticles.slice(
     indexOfFirstArticle,
-    indexOfLastArticle,
+    indexOfLastArticle
   );
 
   return (
