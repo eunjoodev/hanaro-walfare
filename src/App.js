@@ -11,6 +11,7 @@ import Login from "./pages/login/Login";
 import HeaderLayout from "./pages/main/HeaderLayout";
 import Detail from "./pages/detail/Detail";
 import NewsList from "./pages/newsList/NewsList";
+import WelfareList from "./pages/main/WelfareList"; // WelfareList import 추가
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     element: <HeaderLayout />,
     children: [
       { path: "/", element: <Main /> },
+      { path: "welfare", element: <WelfareList /> }, // WelfareList 라우트 추가
       {
         path: "community/*",
         element: <Community />,
@@ -51,10 +53,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />
-      }
+      },
+      { path: "detail/:id", element: <Detail /> } // Detail 라우트를 HeaderLayout 내부로 이동
     ]
   },
-  { path: "/detail", element: <Detail /> },
   { path: "/newslist", element: <NewsList /> }
 ]);
 

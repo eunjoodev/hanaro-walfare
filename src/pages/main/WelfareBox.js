@@ -1,7 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./WelfareBox.module.css";
 
 const WelfareBox = ({ item, layout }) => {
+  const navigate = useNavigate();
+
+  const handleDetailClick = () => {
+    navigate(`/detail/${item.id}`);
+  };
+
   return (
     <div className={layout === "grid" ? styles.gridItem : styles.listItem}>
       <div className={styles.contentContainer}>
@@ -16,7 +23,9 @@ const WelfareBox = ({ item, layout }) => {
           신청 방법: {item.applicationMethod}
         </div>
       </div>
-      <button className={styles.detailButton}>상세보기</button>
+      <button className={styles.detailButton} onClick={handleDetailClick}>
+        상세보기
+      </button>
     </div>
   );
 };
