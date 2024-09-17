@@ -21,10 +21,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const env = process.env.REACT_APP_ENV || "development";
-    const url = env === "production"
-      ? `${process.env.REACT_APP_PROXY_URL}/auth`
-      : `${process.env.REACT_APP_BACKEND_URL}/auth`;
+    const url = process.env.REACT_APP_ENV === "production"
+      ? `${process.env.REACT_APP_PROXY_URL}`
+      : `${process.env.REACT_APP_BACKEND_URL}`;
     setApiUrl(url);
   }, []);
 
@@ -37,7 +36,6 @@ const Login = () => {
 
   const changeHandler = (event) => {
     const { name, value } = event.target;
-
     setLoginData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -51,7 +49,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.put(`${apiUrl}/password`, {
+      const response = await axios.put(`${apiUrl}/auth/password`, {
         uid: loginData.findId,
         new_password: loginData.newPassword,
         new_password_check: loginData.passwordCheck,
@@ -63,7 +61,7 @@ const Login = () => {
         throw new Error("비밀번호 변경 실패");
       }
     } catch (error) {
-      console.error("비밀번호 변경 실패", error);
+      console.error("비밀번호 변경 실패", error.response?.data || error.message);
       alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
     }
   };
@@ -77,7 +75,7 @@ const Login = () => {
     };
 
     try {
-      const response = await axios.post(`${apiUrl}/login`, sendLoginData);
+      const response = await axios.post(`${apiUrl}/auth/login`, sendLoginData);
       if (response.status === 200) {
         const { accessToken } = response.data;
 
@@ -98,7 +96,8 @@ const Login = () => {
         throw new Error("로그인 실패");
       }
     } catch (error) {
-      console.error("로그인 실패", error);
+      console.error("로그인 실패", error.response?.data || error.message);
+      alert("로그인에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
