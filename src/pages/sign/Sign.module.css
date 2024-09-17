@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  /* background-color: #dfeafffa; */
+  min-height: 100vh;
+  padding: 20px 0;
 }
 
 .signbox {
@@ -11,6 +11,8 @@
   padding: 20px 40px;
   border-radius: 10px;
   width: 720px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .formtitle {
@@ -27,11 +29,11 @@
 }
 
 .formGroup {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 40px;
+  justify-content: flex-start;
+  min-height: 40px;
 }
 
 .formGroup label {
@@ -41,25 +43,22 @@
   padding-left: 20px;
 }
 
-.formGroupValid {
-  width: 320px;
+.inputWrapper {
   display: flex;
-  flex-direction: column;
-  align-items: start;
+  flex: 1;
+  align-items: center;
 }
 
-.formGroupinput {
-  width: 320px;
+.formGroupinput, .vaildInput {
+  flex: 1;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box;
 }
 
-.formGroupButton {
-  display: flex;
-  justify-content: flex-end;
-  width: 150px;
+.vaildInput {
+  border-color: red;
 }
 
 .checkButton {
@@ -72,7 +71,6 @@
   cursor: pointer;
   font-size: 14px;
   margin-left: 10px;
-  min-width: 100px;
 }
 
 .checkButton:hover {
@@ -86,6 +84,7 @@
   display: flex;
   justify-content: center;
 }
+
 .submitButton {
   padding: 10px;
   background-color: #adcff2;
@@ -102,17 +101,9 @@
   background-color: #adcff2;
 }
 
-.vaildInput {
-  width: 320px;
-  padding: 8px;
-  border: 1px solid red;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
 .vaildError {
-  width: 300px;
   color: red;
   font-size: 12px;
   margin-top: 5px;
+  margin-left: 130px;
 }
