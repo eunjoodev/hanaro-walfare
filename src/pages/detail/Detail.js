@@ -7,42 +7,45 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import Sidebar from "../../components/common/sidebar/Sidebar";
 
-const PAGE_SIZE = 5;
-
-const mockData = {
-  id: 1,
-  service_name: "예제 서비스",
-  service_purpose_summary: "서비스 서머리.",
-  likeCount: 120,
-  dislikeCount: 10,
-  comments: [
-    { id: 1, text: "좀더 개선이 필요해요!" },
-    { id: 2, text: "솔직히 별로에요." },
-    { id: 3, text: "좋아요!" },
-    { id: 4, text: "더 알려주세요!" },
-    { id: 5, text: "정말 유익합니다." },
-    { id: 6, text: "전국적으로 알려줘요." },
-    { id: 7, text: "정보 고마워요." },
-    { id: 8, text: "이제야 이해됐어요." },
-    { id: 9, text: "수정해야 할 부분이 있어요." },
-    { id: 10, text: "다시 한번 확인해주세요." },
-  ],
-};
+const PAGE_SIZE = 5; // Set the number of comments per page
 
 const Detail = () => {
-  const { id } = useParams();
-  const [data, setData] = useState(mockData);
+  const { serviceName } = useParams();
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [likeCount, setLikeCount] = useState(mockData.likeCount);
-  const [dislikeCount, setDislikeCount] = useState(mockData.dislikeCount);
-  const [comments, setComments] = useState(mockData.comments);
+  const [likeCount, setLikeCount] = useState(0);
+  const [dislikeCount, setDislikeCount] = useState(0);
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setData(mockData);
+        console.log("Received serviceName:", decodeURIComponent(serviceName));
+
+        const detailDataFiles = ['detaildata1', 'detaildata2', 'detaildata3', 'detaildata4'];
+        const detailDataModules = await Promise.all(
+          detailDataFiles.map(file => import(`./${file}.json`))
+        );
+
+        const allData = detailDataModules.flatMap(module => module.default.data || []);
+
+        console.log("All Detail Data:", allData);
+
+        const serviceData = allData.find(item => 
+          item.서비스명 && 
+          item.서비스명.toLowerCase().replace(/\s/g, '') === 
+          decodeURIComponent(serviceName).toLowerCase().replace(/\s/g, '')
+        );
+
+        if (serviceData) {
+          setData(serviceData);
+          console.log("Found service data:", serviceData);
+        } else {
+          console.error("Service not found");
+          console.log("Available services:", allData.map(item => item.서비스명).filter(Boolean));
+        }
       } catch (error) {
         console.error("Error fetching details:", error);
       } finally {
@@ -50,11 +53,10 @@ const Detail = () => {
       }
     };
     fetchData();
-  }, [id]);
+  }, [serviceName]);
 
   const handleButtonClick = () => {
-    window.location.href =
-      "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/149200000026";
+    window.location.href = "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/149200000026";
   };
 
   const handleLike = () => {
@@ -81,13 +83,17 @@ const Detail = () => {
     }
   };
 
-  // Calculate the current comments to display based on pagination
   const indexOfLastComment = currentPage * PAGE_SIZE;
   const indexOfFirstComment = indexOfLastComment - PAGE_SIZE;
-  const currentComments = comments.slice(
-    indexOfFirstComment,
-    indexOfLastComment,
-  );
+  const currentComments = comments.slice(indexOfFirstComment, indexOfLastComment);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!data) {
+    return <div>Service not found. Please check the service name and try again.</div>;
+  }
 
   return (
     <>
@@ -105,74 +111,62 @@ const Detail = () => {
             />
           </div>
           <div className={styles.mainContent}>
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              <>
-                <div className={styles.headerContent}>
-                  <h3>서비스명: {data.service_name}</h3>
-                  <p>서비스 목적 요약: {data.service_purpose_summary}</p>
-                </div>
-                <div className={styles.infoBox}>
-                  <h1>{data.service_name}</h1>
-                  <p>{data.service_purpose_summary}</p>
-                </div>
-                <div className={styles.buttonWrapper}>
-                  <Button
-                    onClick={handleButtonClick}
-                    className={styles.largeButton}
-                  >
-                    신청하기
-                  </Button>
-                </div>
-                <div className={styles.reactions}>
-                  <button onClick={handleLike} className={styles.likeButton}>
-                    좋아요 ({likeCount})
+          <div className={styles.fullDataSection}>
+              <h2>전체 데이터:</h2>
+              <table className={styles.dataTable}>
+                <tbody>
+                  {Object.entries(data).map(([key, value]) => (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>{JSON.stringify(value)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className={styles.buttonWrapper}>
+              <Button onClick={handleButtonClick} className={styles.largeButton}>
+                신청하기
+              </Button>
+            </div>
+            <div className={styles.reactions}>
+              <button onClick={handleLike} className={styles.likeButton}>
+                좋아요 ({likeCount})
+              </button>
+              <button onClick={handleDislike} className={styles.dislikeButton}>
+                싫어요 ({dislikeCount})
+              </button>
+            </div>
+            <div className={styles.commentsSection}>
+              <h2>의견</h2>
+              <ul className={styles.commentsList}>
+                {currentComments.map((comment) => (
+                  <li key={comment.id} className={styles.commentItem}>
+                    {comment.text}
+                  </li>
+                ))}
+              </ul>
+              <Pagination
+                totalPosts={comments.length}
+                postsPerPage={PAGE_SIZE}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+              <div className={styles.commentFormContainer}>
+                <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
+                  <textarea
+                    value={newComment}
+                    onChange={handleCommentChange}
+                    placeholder="의견을 작성하세요"
+                    className={styles.commentInput}
+                  ></textarea>
+                  <button type="submit" className={styles.commentSubmitButton}>
+                    제출
                   </button>
-                  <button
-                    onClick={handleDislike}
-                    className={styles.dislikeButton}
-                  >
-                    싫어요 ({dislikeCount})
-                  </button>
-                </div>
-                <div className={styles.commentsSection}>
-                  <h2>의견</h2>
-                  <ul className={styles.commentsList}>
-                    {currentComments.map((comment) => (
-                      <li key={comment.id} className={styles.commentItem}>
-                        {comment.text}
-                      </li>
-                    ))}
-                  </ul>
-                  <Pagination
-                    totalPosts={comments.length}
-                    postsPerPage={PAGE_SIZE}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                  />
-                  <div className={styles.commentFormContainer}>
-                    <form
-                      onSubmit={handleCommentSubmit}
-                      className={styles.commentForm}
-                    >
-                      <textarea
-                        value={newComment}
-                        onChange={handleCommentChange}
-                        placeholder="의견을 작성하세요"
-                        className={styles.commentInput}
-                      ></textarea>
-                      <button
-                        type="submit"
-                        className={styles.commentSubmitButton}
-                      >
-                        제출
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </>
-            )}
+                </form>
+              </div>
+            </div>
+          
           </div>
         </div>
       </div>
