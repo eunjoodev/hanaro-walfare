@@ -29,10 +29,9 @@ const Sign = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const env = process.env.REACT_APP_ENV || "development";
-    const url = env === "production"
-      ? `${process.env.REACT_APP_PROXY_URL}/auth`
-      : `${process.env.REACT_APP_BACKEND_URL}/auth`;
+    const url = process.env.REACT_APP_ENV === "production"
+      ? `${process.env.REACT_APP_PROXY_URL}`
+      : `${process.env.REACT_APP_BACKEND_URL}`;
     setApiUrl(url);
   }, []);
 
@@ -46,7 +45,6 @@ const Sign = () => {
     setModalMessage("");
   };
 
-  // 유효성 검사를 위한 함수
   const validInput = (name, value) => {
     let isChecked;
     switch (name) {
@@ -70,7 +68,6 @@ const Sign = () => {
     return isChecked;
   };
 
-  // 중복 확인
   const handleCheck = async (title) => {
     const value = userData[title];
     if (!value) {
@@ -80,7 +77,7 @@ const Sign = () => {
 
     const pathName = title === "uid" ? "id" : "email";
     try {
-      const response = await axios.post(`${apiUrl}/${pathName}`, {
+      const response = await axios.post(`${apiUrl}/auth/${pathName}`, {
         [title]: value,
       });
       if (response.status === 200) {
@@ -93,6 +90,7 @@ const Sign = () => {
         openModal("이미 사용중입니다.");
       }
     } catch (error) {
+      console.error("중복 확인 실패:", error.response?.data || error.message);
       openModal("오류가 발생했습니다. 다시 시도해 주세요.");
     }
   };
@@ -119,26 +117,17 @@ const Sign = () => {
     }
 
     try {
-      const response = await axios.post(`${apiUrl}/sign-up`, {
-        uid: userData.uid,
-        name: userData.name,
-        password: userData.password,
-        password_check: userData.password_check,
-        email: userData.email,
-        birthday: userData.birthday,
-        phone_number: userData.phone_number,
-        area: userData.area,
-      });
+      const response = await axios.post(`${apiUrl}/auth/sign-up`, userData);
       if (response.status === 200) {
         console.log("회원가입 성공:", response.data);
         openModal("회원가입이 완료되었습니다.");
         navigate("/login");
       } else {
-        openModal("회원가입에 실패했습니다.");
+        throw new Error("회원가입 실패");
       }
     } catch (error) {
-      console.error("회원가입 실패:", error);
-      openModal("회원가입에 실패했습니다.");
+      console.error("회원가입 실패:", error.response?.data || error.message);
+      openModal("회원가입에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -147,7 +136,90 @@ const Sign = () => {
       {isOpen && (
         <Modal isOpen={isOpen} closeModal={closeModal} message={modalMessage} />
       )}
-      {/* 나머지 JSX 코드는 그대로 유지 */}
+      <div className={styles.signBox}>
+        <h1 className={styles.signTitle}>회원가입</h1>
+        <form onSubmit={handleSubmit} className={styles.signForm}>
+          <div className={styles.inputBox}>
+            <input
+              type="text"
+              name="uid"
+              placeholder="아이디 (8자 이상)"
+              onChange={changeHandler}
+              className={!isValidId ? styles.invalidInput : ""}
+            />
+            <button type="button" onClick={() => handleCheck("uid")}>
+              중복 확인
+            </button>
+          </div>
+          {!isValidId && (
+            <p className={styles.errorMessage}>
+              아이디는 8자 이상의 영문자와 숫자로만 구성되어야 합니다.
+            </p>
+          )}
+          <div className={styles.inputBox}>
+            <input
+              type="password"
+              name="password"
+              placeholder="비밀번호 (10자 이상)"
+              onChange={changeHandler}
+              className={!isValidPassword ? styles.invalidInput : ""}
+            />
+          </div>
+          {!isValidPassword && (
+            <p className={styles.errorMessage}>
+              비밀번호는 10자 이상의 영문자와 숫자로만 구성되어야 합니다.
+            </p>
+          )}
+          <div className={styles.inputBox}>
+            <input
+              type="password"
+              name="password_check"
+              placeholder="비밀번호 확인"
+              onChange={changeHandler}
+              className={!isValidPasswordCheck ? styles.invalidInput : ""}
+            />
+          </div>
+          {!isValidPasswordCheck && (
+            <p className={styles.errorMessage}>비밀번호가 일치하지 않습니다.</p>
+          )}
+          <div className={styles.inputBox}>
+            <input type="text" name="name" placeholder="이름" onChange={changeHandler} />
+          </div>
+          <div className={styles.inputBox}>
+            <input
+              type="email"
+              name="email"
+              placeholder="이메일"
+              onChange={changeHandler}
+            />
+            <button type="button" onClick={() => handleCheck("email")}>
+              중복 확인
+            </button>
+          </div>
+          <div className={styles.inputBox}>
+            <input
+              type="date"
+              name="birthday"
+              placeholder="생년월일"
+              onChange={changeHandler}
+            />
+          </div>
+          <div className={styles.inputBox}>
+            <input
+              type="tel"
+              name="phone_number"
+              placeholder="전화번호"
+              onChange={changeHandler}
+            />
+          </div>
+          <div className={styles.inputBox}>
+            <input type="text" name="area" placeholder="지역" onChange={changeHandler} />
+          </div>
+          <button type="submit" className={styles.signButton}>
+            가입하기
+          </button>
+        </form>
+      </div>
     </>
   );
 };
