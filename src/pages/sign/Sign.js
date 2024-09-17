@@ -110,7 +110,6 @@ const Sign = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(userData);
     if (!isValidId || !isValidPassword || !isValidPasswordCheck) {
       openModal("입력 정보를 확인해주세요.");
       return;
@@ -132,95 +131,109 @@ const Sign = () => {
   };
 
   return (
-    <>
+    <div className={styles.pagebox}>
       {isOpen && (
         <Modal isOpen={isOpen} closeModal={closeModal} message={modalMessage} />
       )}
-      <div className={styles.signBox}>
-        <h1 className={styles.signTitle}>회원가입</h1>
-        <form onSubmit={handleSubmit} className={styles.signForm}>
-          <div className={styles.inputBox}>
-            <input
-              type="text"
-              name="uid"
-              placeholder="아이디 (8자 이상)"
-              onChange={changeHandler}
-              className={!isValidId ? styles.invalidInput : ""}
-            />
-            <button type="button" onClick={() => handleCheck("uid")}>
-              중복 확인
-            </button>
+      <div className={styles.signbox}>
+        <h1 className={styles.formtitle}>회원가입</h1>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label>아이디</label>
+            <div className={styles.inputWrapper}>
+              <input
+                type="text"
+                name="uid"
+                placeholder="아이디 (8자 이상)"
+                onChange={changeHandler}
+                className={!isValidId ? styles.vaildInput : styles.formGroupinput}
+              />
+              <button type="button" onClick={() => handleCheck("uid")} className={styles.checkButton}>
+                중복 확인
+              </button>
+            </div>
           </div>
-          {!isValidId && (
-            <p className={styles.errorMessage}>
-              아이디는 8자 이상의 영문자와 숫자로만 구성되어야 합니다.
-            </p>
-          )}
-          <div className={styles.inputBox}>
+          {!isValidId && <p className={styles.vaildError}>아이디는 8자 이상의 영문자와 숫자로만 구성되어야 합니다.</p>}
+
+          <div className={styles.formGroup}>
+            <label>비밀번호</label>
             <input
               type="password"
               name="password"
               placeholder="비밀번호 (10자 이상)"
               onChange={changeHandler}
-              className={!isValidPassword ? styles.invalidInput : ""}
+              className={!isValidPassword ? styles.vaildInput : styles.formGroupinput}
             />
           </div>
-          {!isValidPassword && (
-            <p className={styles.errorMessage}>
-              비밀번호는 10자 이상의 영문자와 숫자로만 구성되어야 합니다.
-            </p>
-          )}
-          <div className={styles.inputBox}>
+          {!isValidPassword && <p className={styles.vaildError}>비밀번호는 10자 이상의 영문자와 숫자로만 구성되어야 합니다.</p>}
+
+          <div className={styles.formGroup}>
+            <label>비밀번호 확인</label>
             <input
               type="password"
               name="password_check"
               placeholder="비밀번호 확인"
               onChange={changeHandler}
-              className={!isValidPasswordCheck ? styles.invalidInput : ""}
+              className={!isValidPasswordCheck ? styles.vaildInput : styles.formGroupinput}
             />
           </div>
-          {!isValidPasswordCheck && (
-            <p className={styles.errorMessage}>비밀번호가 일치하지 않습니다.</p>
-          )}
-          <div className={styles.inputBox}>
-            <input type="text" name="name" placeholder="이름" onChange={changeHandler} />
+          {!isValidPasswordCheck && <p className={styles.vaildError}>비밀번호가 일치하지 않습니다.</p>}
+
+          <div className={styles.formGroup}>
+            <label>이름</label>
+            <input type="text" name="name" placeholder="이름" onChange={changeHandler} className={styles.formGroupinput} />
           </div>
-          <div className={styles.inputBox}>
-            <input
-              type="email"
-              name="email"
-              placeholder="이메일"
-              onChange={changeHandler}
-            />
-            <button type="button" onClick={() => handleCheck("email")}>
-              중복 확인
-            </button>
+
+          <div className={styles.formGroup}>
+            <label>이메일</label>
+            <div className={styles.inputWrapper}>
+              <input
+                type="email"
+                name="email"
+                placeholder="이메일"
+                onChange={changeHandler}
+                className={styles.formGroupinput}
+              />
+              <button type="button" onClick={() => handleCheck("email")} className={styles.checkButton}>
+                중복 확인
+              </button>
+            </div>
           </div>
-          <div className={styles.inputBox}>
+
+          <div className={styles.formGroup}>
+            <label>생년월일</label>
             <input
               type="date"
               name="birthday"
-              placeholder="생년월일"
               onChange={changeHandler}
+              className={styles.formGroupinput}
             />
           </div>
-          <div className={styles.inputBox}>
+
+          <div className={styles.formGroup}>
+            <label>전화번호</label>
             <input
               type="tel"
               name="phone_number"
               placeholder="전화번호"
               onChange={changeHandler}
+              className={styles.formGroupinput}
             />
           </div>
-          <div className={styles.inputBox}>
-            <input type="text" name="area" placeholder="지역" onChange={changeHandler} />
+
+          <div className={styles.formGroup}>
+            <label>지역</label>
+            <input type="text" name="area" placeholder="지역" onChange={changeHandler} className={styles.formGroupinput} />
           </div>
-          <button type="submit" className={styles.signButton}>
-            가입하기
-          </button>
+
+          <div className={styles.submit}>
+            <button type="submit" className={styles.submitButton}>
+              가입하기
+            </button>
+          </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 
