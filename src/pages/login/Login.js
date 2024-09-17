@@ -1,4 +1,4 @@
-  import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Login.module.css";
 import OAuth from "../../components/sociallogin/OAuth";
 import { useRecoilState } from "recoil";
@@ -6,7 +6,6 @@ import { authState } from "../../states/Auth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
 const Login = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loginData, setLoginData] = useState({
@@ -16,9 +15,19 @@ const Login = () => {
     newPassword: "",
     passwordCheck: "",
   });
+  const [apiUrl, setApiUrl] = useState('');
 
   const [auth, setAuth] = useRecoilState(authState);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const env = process.env.REACT_APP_ENV || "development";
+    const url = env === "production"
+      ? `${process.env.REACT_APP_PROXY_URL}/auth`
+      : `${process.env.REACT_APP_BACKEND_URL}/auth`;
+    setApiUrl(url);
+  }, []);
+
   const openModal = () => {
     setIsOpen(true);
   };
@@ -42,7 +51,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.put(`${API_URL}/auth/password`, {
+      const response = await axios.put(`${apiUrl}/password`, {
         uid: loginData.findId,
         new_password: loginData.newPassword,
         new_password_check: loginData.passwordCheck,
@@ -67,9 +76,8 @@ const Login = () => {
       password: loginData.password,
     };
 
-    console.log(API_URL);
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, sendLoginData);
+      const response = await axios.post(`${apiUrl}/login`, sendLoginData);
       if (response.status === 200) {
         const { accessToken } = response.data;
 
