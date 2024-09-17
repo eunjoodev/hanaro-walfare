@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import Button from "../../components/common/button/Button";
 import Pagination from "../../components/common/pagination/Pagination";
 import styles from "./Detail.module.css";
-import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import Sidebar from "../../components/common/sidebar/Sidebar";
 
@@ -97,7 +96,6 @@ const Detail = () => {
 
   return (
     <>
-      <Header className={styles.headerTitle} />
       <div className={styles.layoutContainer}>
         <div className={styles.contentContainer}>
           <div className={styles.sidebarWrapper}>
