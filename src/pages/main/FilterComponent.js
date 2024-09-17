@@ -19,7 +19,6 @@ const FilterComponent = ({ onFilterChange }) => {
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
-        // 환경변수에 따라 다른 프록시 및 백엔드 URL 사용
         const env = process.env.REACT_APP_ENV || "development";
         const apiUrl =
           env === "production"
@@ -45,11 +44,6 @@ const FilterComponent = ({ onFilterChange }) => {
 
     fetchFilterOptions();
   }, []);
-
-  // 사용자가 선택한 항목이 변경될 때마다 필터링 업데이트
-  useEffect(() => {
-    onFilterChange(filters);
-  }, [filters, onFilterChange]);
 
   const handleUserTypeChange = (e) => {
     setFilters((prev) => ({
@@ -80,7 +74,7 @@ const FilterComponent = ({ onFilterChange }) => {
 
   const handleFilterApply = () => {
     onFilterChange(filters);
-    setIsDropdownOpen(false); // 드롭다운 닫기
+    setIsDropdownOpen(false);
   };
 
   return (

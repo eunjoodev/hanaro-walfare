@@ -14,11 +14,17 @@ const WelfareList = () => {
   const [welfareItems, setWelfareItems] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(24);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [layout, setLayout] = useState("grid");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchWelfareItems = useCallback(async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    setError(null);
+
     const query = new URLSearchParams({
       "user-type": filters.userType || "",
       "application-method": filters.applicationMethod || "",
@@ -27,42 +33,60 @@ const WelfareList = () => {
       size: itemsPerPage.toString(),
     });
 
-    try {
-      const env = process.env.REACT_APP_ENV || "development";
-      const apiUrl =
-        env === "production"
-          ? `${process.env.REACT_APP_PROXY_URL}/main?${query.toString()}`
-          : `${process.env.REACT_APP_BACKEND_URL}/main?${query.toString()}`;
+    const apiUrl = `/api/proxy/main?${query.toString()}`;
 
+    try {
+      console.log("Fetching data for:", apiUrl);
       const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
       const data = await response.json();
       console.log("API 응답 데이터:", data);
-      setWelfareItems(data.data.content);
-      setTotalItems(data.data.totalElements);
-      setTotalPages(data.data.totalPages);
+
+      if (data.data && data.data.content) {
+        setWelfareItems(data.data.content);
+        setTotalItems(data.data.totalElements);
+      } else {
+        console.error("잘못된 응답 형식:", data);
+        setError("데이터 형식이 올바르지 않습니다.");
+      }
     } catch (error) {
       console.error("Failed to fetch welfare items", error);
+      setError("데이터를 불러오는 데 실패했습니다. 다시 시도해 주세요.");
+    } finally {
+      setIsLoading(false);
     }
-  }, [filters, page, itemsPerPage]);
+  }, [filters, itemsPerPage, page]);
 
   useEffect(() => {
     fetchWelfareItems();
   }, [fetchWelfareItems]);
 
+  useEffect(() => {
+    setTotalPages(Math.ceil(totalItems / itemsPerPage));
+  }, [totalItems, itemsPerPage]);
+
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
-    setPage(0);
+    setPage(1);
   };
 
   const handleItemsPerPageChange = (newSize) => {
     setItemsPerPage(newSize);
-    setPage(0);
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage <= 0 || newPage > totalPages) return;
+    setPage(newPage);
   };
 
   return (
     <div>
       <FilterComponent onFilterChange={handleFilterChange} />
-
       <WelfareListHeader
         totalItems={totalItems}
         itemsPerPage={itemsPerPage}
@@ -70,40 +94,31 @@ const WelfareList = () => {
         layout={layout}
         setLayout={setLayout}
       />
-
-      <div
-        className={
-          layout === "grid"
-            ? styles.welfareListContainer
-            : styles.welfareListContainerList
-        }
-      >
-        {welfareItems.length > 0 ? (
-          welfareItems.map((item, index) => (
-            <WelfareBox key={index} item={item} layout={layout} />
-          ))
-        ) : (
-          <p>복지 혜택이 없습니다.</p>
-        )}
-      </div>
-
+      {error && <p className={styles.errorMessage}>{error}</p>}
+      {isLoading ? (
+        <p>로딩 중...</p>
+      ) : (
+        <div className={layout === "grid" ? styles.welfareListContainer : styles.welfareListContainerList}>
+          {welfareItems.length > 0 ? (
+            welfareItems.map((item, index) => (
+              <WelfareBox key={index} item={item} layout={layout} />
+            ))
+          ) : (
+            <p>복지 혜택이 없습니다.</p>
+          )}
+        </div>
+      )}
       <div className={styles.pagination}>
-        {page > 0 && (
-          <button
-            onClick={() => setPage(page - 1)}
-            className={styles.pageButton}
-          >
+        {page > 1 && (
+          <button onClick={() => handlePageChange(page - 1)} className={styles.pageButton}>
             이전
           </button>
         )}
         <span>
-          페이지 {page + 1} / {totalPages}
+          페이지 {page} / {totalPages}
         </span>
-        {page < totalPages - 1 && (
-          <button
-            onClick={() => setPage(page + 1)}
-            className={styles.pageButton}
-          >
+        {page < totalPages && (
+          <button onClick={() => handlePageChange(page + 1)} className={styles.pageButton}>
             다음
           </button>
         )}
