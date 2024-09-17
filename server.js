@@ -1,29 +1,42 @@
 const express = require("express");
 const cors = require("cors");
-const supabase = require("./supabase-client");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+const allowedOrigins = [
+  "https://hanaro-walfare.vercel.app/",
+];
 
-app.get("/api/news", async (req, res) => {
-  try {
-    const { data: articles, error } = await supabase
-      .from("news")
-      .select("*")
-      .order("id", { ascending: false });
-
-    if (error) {
-      console.error("Error fetching data from Supabase:", error);
-      return res.status(500).json({ error: "Failed to fetch news" });
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
     }
+  },
+  optionsSuccessStatus: 200,
+};
 
-    res.json({ articles });
-  } catch (error) {
-    console.error("Server error:", error);
-    res.status(500).json({ error: "Server error" });
-  }
+app.use(cors(corsOptions));
+
+// 백엔드 API 프록시 설정
+app.use(
+  "/api",
+  createProxyMiddleware({
+    target: "http://ec2-43-201-19-45.ap-northeast-2.compute.amazonaws.com:8080",
+    changeOrigin: true,
+    pathRewrite: {
+      "^/api": "", // 프록시로 요청 보낼 때 '/api'를 제거
+    },
+  }),
+);
+
+// 예제 라우트
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
 
 app.listen(PORT, () => {

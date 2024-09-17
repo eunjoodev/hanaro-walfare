@@ -33,6 +33,7 @@ function BulletinBoard() {
           },
         });
         const { elements, pagination } = response.data;
+        console.log("Fetched Data:", elements);
         setFilteredData(elements);
         setAllData(elements);
         setTotalPosts(pagination.totalCount);
@@ -78,6 +79,7 @@ function BulletinBoard() {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredData.slice(indexOfFirstPost, indexOfLastPost);
+  console.log("Current Posts:", currentPosts);
 
   const totalPages = Math.ceil(totalPosts / postsPerPage);
 
