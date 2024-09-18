@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Sign.module.css";
 import Modal from "../../components/common/modal/Modal";
 import axios from "axios";
@@ -24,34 +24,32 @@ const Sign = () => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [apiUrl, setApiUrl] = useState('');
-
+  const [formSuccessed, setFormSuccessed] = useState(false);
+  const [apiUrl, setApiUrl] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const url = process.env.REACT_APP_ENV === "production"
-      ? `${process.env.REACT_APP_PROXY_URL}`
-      : `${process.env.REACT_APP_BACKEND_URL}`;
+    const url =
+      process.env.REACT_APP_ENV === "production"
+        ? `${process.env.REACT_APP_PROXY_URL}`
+        : `${process.env.REACT_APP_BACKEND_URL}`;
     setApiUrl(url);
   }, []);
 
-  useEffect(() => {
-    console.log("Modal open state:", isOpen);
-  }, [isOpen]);
-
-  const openModal = useCallback((message) => {
+  const openModal = (message) => {
     setModalMessage(message);
     setIsOpen(true);
-    console.log("Modal opened with message:", message);
-  }, []);
+  };
 
-  const closeModal = useCallback(() => {
+  const closeModal = () => {
     setIsOpen(false);
     setModalMessage("");
-    console.log("Modal closed");
-  }, []);
+    if (formSuccessed === true) {
+      navigate("/login");
+    }
+  };
 
-  const validInput = useCallback((name, value) => {
+  const validInput = (name, value) => {
     let isChecked;
     switch (name) {
       case "uid":
@@ -72,9 +70,9 @@ const Sign = () => {
         break;
     }
     return isChecked;
-  }, [userData.password]);
+  };
 
-  const handleCheck = useCallback(async (title) => {
+  const handleCheck = async (title) => {
     const value = userData[title];
     if (!value) {
       openModal("값을 입력해 주세요.");
@@ -99,9 +97,9 @@ const Sign = () => {
       console.error("중복 확인 실패:", error.response?.data || error.message);
       openModal("오류가 발생했습니다. 다시 시도해 주세요.");
     }
-  }, [userData, apiUrl, openModal]);
+  };
 
-  const changeHandler = useCallback((event) => {
+  const changeHandler = (event) => {
     const { name, value } = event.target;
     let setValue = value;
     if (name === "phone_number") {
@@ -112,9 +110,9 @@ const Sign = () => {
       ...prevData,
       [name]: setValue,
     }));
-  }, [validInput]);
+  };
 
-  const handleSubmit = useCallback(async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!isValidId || !isValidPassword || !isValidPasswordCheck) {
       openModal("입력 정보를 확인해주세요.");
@@ -124,9 +122,9 @@ const Sign = () => {
     try {
       const response = await axios.post(`${apiUrl}/auth/sign-up`, userData);
       if (response.status === 200) {
+        setFormSuccessed(true);
         console.log("회원가입 성공:", response.data);
         openModal("회원가입이 완료되었습니다.");
-        navigate("/login");
       } else {
         throw new Error("회원가입 실패");
       }
@@ -134,133 +132,166 @@ const Sign = () => {
       console.error("회원가입 실패:", error.response?.data || error.message);
       openModal("회원가입에 실패했습니다. 다시 시도해주세요.");
     }
-  }, [isValidId, isValidPassword, isValidPasswordCheck, userData, apiUrl, openModal, navigate]);
+  };
 
   return (
-    <div className={styles.pagebox}>
-     {isOpen && (
-  <Modal 
-    message={modalMessage} 
-    onClose={() => {
-      closeModal();
-      console.log("Modal closed from Sign component");
-    }} 
-  />
-)}
-
-      <div className={styles.signbox}>
-        <h1 className={styles.formtitle}>회원가입</h1>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.formGroup}>
-            <label>아이디</label>
-            <div className={styles.inputWrapper}>
+    //
+    <>
+      {isOpen && <Modal message={modalMessage} onClose={closeModal} />}
+      <div className={styles.pagebox}>
+        <div className={styles.signbox}>
+          <h1 className={styles.formtitle}>회원가입</h1>
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <div className={styles.formGroup}>
+              <label htmlFor="uid">아이디</label>
+              <div className={styles.formGroupValid}>
+                <input
+                  type="text"
+                  id="uid"
+                  name="uid"
+                  onChange={changeHandler}
+                  className={
+                    !isValidId ? styles.vaildInput : styles.formGroupinput
+                  }
+                  required
+                />
+                {!isValidId && (
+                  <div className={styles.vaildError}>
+                    아이디는 8자 이상의 영문, 숫자로 조합
+                  </div>
+                )}
+              </div>
+              <div className={styles.formGroupButton}>
+                <button
+                  type="button"
+                  className={styles.checkButton}
+                  onClick={() => handleCheck("uid")}
+                >
+                  중복확인
+                </button>
+              </div>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="name">이름</label>
               <input
                 type="text"
-                name="uid"
-                placeholder="아이디 (8자 이상)"
-                onChange={changeHandler}
-                className={!isValidId ? styles.vaildInput : styles.formGroupinput}
-              />
-              <button 
-                type="button" 
-                onClick={() => {
-                  console.log("ID check button clicked");
-                  handleCheck("uid");
-                }} 
-                className={styles.checkButton}
-              >
-                중복 확인
-              </button>
-            </div>
-          </div>
-          {!isValidId && <p className={styles.vaildError}>아이디는 8자 이상의 영문자와 숫자로만 구성되어야 합니다.</p>}
-
-          <div className={styles.formGroup}>
-            <label>비밀번호</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="비밀번호 (10자 이상)"
-              onChange={changeHandler}
-              className={!isValidPassword ? styles.vaildInput : styles.formGroupinput}
-            />
-          </div>
-          {!isValidPassword && <p className={styles.vaildError}>비밀번호는 10자 이상의 영문자와 숫자로만 구성되어야 합니다.</p>}
-
-          <div className={styles.formGroup}>
-            <label>비밀번호 확인</label>
-            <input
-              type="password"
-              name="password_check"
-              placeholder="비밀번호 확인"
-              onChange={changeHandler}
-              className={!isValidPasswordCheck ? styles.vaildInput : styles.formGroupinput}
-            />
-          </div>
-          {!isValidPasswordCheck && <p className={styles.vaildError}>비밀번호가 일치하지 않습니다.</p>}
-
-          <div className={styles.formGroup}>
-            <label>이름</label>
-            <input type="text" name="name" placeholder="이름" onChange={changeHandler} className={styles.formGroupinput} />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>이메일</label>
-            <div className={styles.inputWrapper}>
-              <input
-                type="email"
-                name="email"
-                placeholder="이메일"
+                id="name"
+                name="name"
                 onChange={changeHandler}
                 className={styles.formGroupinput}
+                required
               />
-              <button 
-                type="button" 
-                onClick={() => {
-                  console.log("Email check button clicked");
-                  handleCheck("email");
-                }} 
-                className={styles.checkButton}
-              >
-                중복 확인
+              <div className={styles.formGroupButton}></div>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="birthday">생년월일</label>
+              <input
+                type="date"
+                id="birthday"
+                name="birthday"
+                onChange={changeHandler}
+                className={styles.formGroupinput}
+                placeholder="YYYY-MM-DD"
+                required
+              />
+              <div className={styles.formGroupButton}></div>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="email">이메일</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                onChange={changeHandler}
+                className={styles.formGroupinput}
+                required
+              />
+              <div className={styles.formGroupButton}>
+                <button
+                  type="button"
+                  className={styles.checkButton}
+                  onClick={() => handleCheck("email")}
+                >
+                  중복확인
+                </button>
+              </div>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="password">비밀번호</label>
+              <div className={styles.formGroupValid}>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  onChange={changeHandler}
+                  className={
+                    !isValidPassword ? styles.vaildInput : styles.formGroupinput
+                  }
+                  required
+                />
+                {!isValidPassword && (
+                  <div className={styles.vaildError}>
+                    비밀번호는 10자 이상의 영문, 숫자로 조합
+                  </div>
+                )}
+              </div>
+              <div className={styles.formGroupButton}></div>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="password_check">비밀번호 확인</label>
+              <div className={styles.formGroupValid}>
+                <input
+                  type="password"
+                  id="password_check"
+                  name="password_check"
+                  onChange={changeHandler}
+                  className={
+                    !isValidPassword ? styles.vaildInput : styles.formGroupinput
+                  }
+                  required
+                />
+                {!isValidPasswordCheck && (
+                  <div className={styles.vaildError}>
+                    비밀번호가 일치하지 않습니다.
+                  </div>
+                )}
+              </div>
+              <div className={styles.formGroupButton}></div>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="phone_number">연락처</label>
+              <input
+                type="text"
+                id="phone_number"
+                name="phone_number"
+                placeholder="010-1234-5678"
+                onChange={changeHandler}
+                className={styles.formGroupinput}
+                required
+              />
+              <div className={styles.formGroupButton}></div>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="area">거주 지역</label>
+              <input
+                type="text"
+                id="area"
+                name="area"
+                onChange={changeHandler}
+                className={styles.formGroupinput}
+                required
+              />
+              <div className={styles.formGroupButton}></div>
+            </div>
+            <div className={styles.submit}>
+              <button type="submit" className={styles.submitButton}>
+                가입하기
               </button>
             </div>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>생년월일</label>
-            <input
-              type="date"
-              name="birthday"
-              onChange={changeHandler}
-              className={styles.formGroupinput}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>전화번호</label>
-            <input
-              type="tel"
-              name="phone_number"
-              placeholder="전화번호"
-              onChange={changeHandler}
-              className={styles.formGroupinput}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>지역</label>
-            <input type="text" name="area" placeholder="지역" onChange={changeHandler} className={styles.formGroupinput} />
-          </div>
-
-          <div className={styles.submit}>
-            <button type="submit" className={styles.submitButton}>
-              가입하기
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
