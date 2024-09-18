@@ -10,6 +10,7 @@ const Detail = () => {
   const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("지원대상"); // Set default active tab
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +58,30 @@ const Detail = () => {
     window.location.href = "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/149200000026";
   };
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "주요내용":
+        return (
+          <>
+            <p><strong>신청기간:</strong> {data.신청기한}</p>
+            <p><strong>전화문의:</strong> {data.전화문의}</p>
+          </>
+        );
+      case "지원유형":
+        return <p>{data.지원유형}</p>;
+      case "지원대상":
+        return <p>{data.지원대상}</p>;
+      case "지원내용":
+        return <p>{data.지원내용}</p>;
+      case "신청방법":
+        return <p>{data.신청방법}</p>;
+      case "상세조회URL":
+        return <p>{data.상세조회URL}</p>;  
+      default:
+        return null;
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -87,18 +112,18 @@ const Detail = () => {
             <table className={styles.infoTable}>
               <thead>
                 <tr>
-                  <th>기준연도</th>
-                  <th>문의처</th>
-                  <th>지원주기</th>
-                  <th>제공유형</th>
+                  <th>서비스분야</th>
+                  <th>선정기준</th>
+                  <th>소관기관명</th>
+                  <th>신청방법</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>{data.기준연도}</td>
-                  <td>{data.문의처}</td>
-                  <td>{data.지원주기}</td>
-                  <td>{data.제공유형}</td>
+                  <td>{data.서비스분야}</td>
+                  <td>{data.선정기준}</td>
+                  <td>{data.소관기관명}</td>
+                  <td>{data.신청방법}</td>
                 </tr>
               </tbody>
             </table>
@@ -109,20 +134,22 @@ const Detail = () => {
               </Button>
             </div>
 
+            {/* Tab Navigation */}
             <div className={styles.tabNavigation}>
-              <button className={styles.activeTab}>주요내용</button>
-              <button>지원대상</button>
-              <button>지원내용</button>
-              <button>신청방법</button>
-              <button>접수/문의</button>
+              {["지원유형", "지원대상", "지원내용", "신청방법", "상세조회URL"].map(tab => (
+                <button
+                  key={tab}
+                  className={activeTab === tab ? styles.activeTab : ""}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
 
             {/* Tab Content */}
             <div className={styles.tabContent}>
-              {/* Example content for "주요내용" tab */}
-              <p><strong>신청기간:</strong> 상시신청</p>
-              <p><strong>전화문의:</strong> 고용노동부 고객상담센터 (1350)</p>
-              {/* Add more content as needed */}
+              {renderTabContent()}
             </div>
 
           </div>
@@ -134,3 +161,4 @@ const Detail = () => {
 };
 
 export default Detail;
+  
