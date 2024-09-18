@@ -30,7 +30,7 @@ const Header = () => {
     };
   }, []);
 
-  //로그아웃
+  // 로그아웃
   const handleLogout = () => {
     setAuth({
       isLoggedIn: false,
@@ -70,20 +70,22 @@ const Header = () => {
             하나로 복지
           </span>
         </div>
-        <div className={styles.userMenu}> 
-        <span 
-          className={styles.userMenuItem} 
-          onClick={() => navigate('/search')}
-          style={{ cursor: 'pointer' }}
-        >
-          통합검색
-        </span>
+        <div className={styles.userMenu}>
           <span
             className={styles.userMenuItem}
-            onClick={() => handleNavigate("/sign")}   
+            onClick={() => navigate('/search')}
+            style={{ cursor: 'pointer' }}
           >
-            회원가입
+            통합검색
           </span>
+          {!isLoggedIn && (
+            <span
+              className={styles.userMenuItem}
+              onClick={() => handleNavigate("/sign")}
+            >
+              회원가입
+            </span>
+          )}
           {isLoggedIn ? (
             <span className={styles.userMenuItem} onClick={handleLogout}>
               로그아웃
