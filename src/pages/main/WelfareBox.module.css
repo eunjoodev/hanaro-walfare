@@ -10,6 +10,72 @@
   justify-content: space-between;
 }
 
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d7d7d8;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 160px;
+}
+
+.listItem .contentContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.listItem .tagAndTitle {
+  width: 28%;
+  padding-right: 40px;
+}
+
+.listItem .title {
+  font-size: 1.3rem;
+}
+
+.listItem .details {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 62%;
+}
+
+.listItem .summary {
+  font-size: 1rem;
+  color: #707070;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  width: 70%;
+}
+
+.listItem .fieldTag {
+  display: inline-block;
+  background-color: #e8eef8;
+  color: #1b55bd;
+  padding: 3px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.listItem .applicationDead,
+.listItem .applicationWay {
+  font-size: 0.9rem;
+  color: #707070;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.2;
+  width: 100px; /* 너비를 늘려 두 줄로 나눌 수 있게 함 */
+}
+
 .tag {
   font-size: 15px;
   color: #1b55bd;
