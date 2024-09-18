@@ -84,7 +84,7 @@ const Sign = () => {
       const response = await axios.post(`${apiUrl}/auth/${pathName}`, {
         [title]: value,
       });
-      if (response.status === 200) {
+      if (response.data.code === 200) {
         openModal("사용 가능합니다.");
         setIsCheckedData((prev) => ({
           ...prev,
