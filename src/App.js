@@ -12,6 +12,7 @@ import Detail from "./pages/detail/Detail";
 import NewsList from "./pages/newsList/NewsList";
 import WelfareList from "./pages/main/WelfareList";
 import KeyBenefits from "./pages/main/KeyBenefits";
+import Search from "./pages/search/Search";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
     element: <HeaderLayout />,
     children: [
       { path: "/", element: <Main /> },
+      { path: "search", element: <Search /> }, 
       { 
         path: "welfare",
         children: [
@@ -49,6 +51,7 @@ const router = createBrowserRouter([
     ]
   },
   { path: "/newslist", element: <NewsList /> }
+  
 ]);
 
 function App() {

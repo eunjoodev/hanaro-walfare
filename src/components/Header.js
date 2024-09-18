@@ -70,16 +70,20 @@ const Header = () => {
             하나로 복지
           </span>
         </div>
-        <div className={styles.userMenu}>
-          <span className={styles.userMenuItem}>통합검색</span>
-          {!isLoggedIn && (
-            <span
-              className={styles.userMenuItem}
-              onClick={() => handleNavigate("/sign")}
-            >
-              회원가입
-            </span>
-          )}
+        <div className={styles.userMenu}> 
+        <span 
+          className={styles.userMenuItem} 
+          onClick={() => navigate('/search')}
+          style={{ cursor: 'pointer' }}
+        >
+          통합검색
+        </span>
+          <span
+            className={styles.userMenuItem}
+            onClick={() => handleNavigate("/sign")}   
+          >
+            회원가입
+          </span>
           {isLoggedIn ? (
             <span className={styles.userMenuItem} onClick={handleLogout}>
               로그아웃

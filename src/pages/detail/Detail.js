@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Button from "../../components/common/button/Button";
 import styles from "./Detail.module.css";
-import Footer from "../../components/Footer";
 import Sidebar from "../../components/common/sidebar/Sidebar";
 
 const Detail = () => {
@@ -155,7 +154,6 @@ const Detail = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };
