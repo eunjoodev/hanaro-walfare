@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./Sign.module.css";
 import Modal from "../../components/common/modal/Modal";
 import axios from "axios";
@@ -35,17 +35,23 @@ const Sign = () => {
     setApiUrl(url);
   }, []);
 
-  const openModal = (message) => {
+  useEffect(() => {
+    console.log("Modal open state:", isOpen);
+  }, [isOpen]);
+
+  const openModal = useCallback((message) => {
     setModalMessage(message);
     setIsOpen(true);
-  };
+    console.log("Modal opened with message:", message);
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsOpen(false);
     setModalMessage("");
-  };
+    console.log("Modal closed");
+  }, []);
 
-  const validInput = (name, value) => {
+  const validInput = useCallback((name, value) => {
     let isChecked;
     switch (name) {
       case "uid":
@@ -66,9 +72,9 @@ const Sign = () => {
         break;
     }
     return isChecked;
-  };
+  }, [userData.password]);
 
-  const handleCheck = async (title) => {
+  const handleCheck = useCallback(async (title) => {
     const value = userData[title];
     if (!value) {
       openModal("값을 입력해 주세요.");
@@ -93,9 +99,9 @@ const Sign = () => {
       console.error("중복 확인 실패:", error.response?.data || error.message);
       openModal("오류가 발생했습니다. 다시 시도해 주세요.");
     }
-  };
+  }, [userData, apiUrl, openModal]);
 
-  const changeHandler = (event) => {
+  const changeHandler = useCallback((event) => {
     const { name, value } = event.target;
     let setValue = value;
     if (name === "phone_number") {
@@ -106,9 +112,9 @@ const Sign = () => {
       ...prevData,
       [name]: setValue,
     }));
-  };
+  }, [validInput]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
     if (!isValidId || !isValidPassword || !isValidPasswordCheck) {
       openModal("입력 정보를 확인해주세요.");
@@ -128,13 +134,20 @@ const Sign = () => {
       console.error("회원가입 실패:", error.response?.data || error.message);
       openModal("회원가입에 실패했습니다. 다시 시도해주세요.");
     }
-  };
+  }, [isValidId, isValidPassword, isValidPasswordCheck, userData, apiUrl, openModal, navigate]);
 
   return (
     <div className={styles.pagebox}>
-      {isOpen && (
-        <Modal isOpen={isOpen} closeModal={closeModal} message={modalMessage} />
-      )}
+     {isOpen && (
+  <Modal 
+    message={modalMessage} 
+    onClose={() => {
+      closeModal();
+      console.log("Modal closed from Sign component");
+    }} 
+  />
+)}
+
       <div className={styles.signbox}>
         <h1 className={styles.formtitle}>회원가입</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -148,7 +161,14 @@ const Sign = () => {
                 onChange={changeHandler}
                 className={!isValidId ? styles.vaildInput : styles.formGroupinput}
               />
-              <button type="button" onClick={() => handleCheck("uid")} className={styles.checkButton}>
+              <button 
+                type="button" 
+                onClick={() => {
+                  console.log("ID check button clicked");
+                  handleCheck("uid");
+                }} 
+                className={styles.checkButton}
+              >
                 중복 확인
               </button>
             </div>
@@ -194,7 +214,14 @@ const Sign = () => {
                 onChange={changeHandler}
                 className={styles.formGroupinput}
               />
-              <button type="button" onClick={() => handleCheck("email")} className={styles.checkButton}>
+              <button 
+                type="button" 
+                onClick={() => {
+                  console.log("Email check button clicked");
+                  handleCheck("email");
+                }} 
+                className={styles.checkButton}
+              >
                 중복 확인
               </button>
             </div>
