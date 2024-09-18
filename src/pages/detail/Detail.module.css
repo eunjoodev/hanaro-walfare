@@ -74,6 +74,7 @@
  margin-top :10px; 
 }
 
+/* Responsive adjustments */
 @media (max-width:1280px) { 
     .contentContainer { 
         width :100%; 
