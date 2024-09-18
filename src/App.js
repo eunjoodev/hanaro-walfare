@@ -26,6 +26,8 @@ const router = createBrowserRouter([
           { path: "detail/:serviceName", element: <Detail /> }
         ]
       },
+      // 새로운 경로 추가
+      { path: "detail/:serviceName", element: <Detail /> },
       {
         path: "community/*",
         element: <Community />,

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Button from "../../components/common/button/Button";
 import Pagination from "../../components/common/pagination/Pagination";
 import styles from "./Detail.module.css";
 import Footer from "../../components/Footer";
 import Sidebar from "../../components/common/sidebar/Sidebar";
 
-const PAGE_SIZE = 5; // Set the number of comments per page
+const PAGE_SIZE = 5;
 
 const Detail = () => {
   const { serviceName } = useParams();
+  const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [likeCount, setLikeCount] = useState(0);
@@ -21,6 +22,12 @@ const Detail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (location.state && location.state.benefitData) {
+          setData(location.state.benefitData);
+          setLoading(false);
+          return;
+        }
+
         console.log("Received serviceName:", decodeURIComponent(serviceName));
 
         const detailDataFiles = ['detaildata1', 'detaildata2', 'detaildata3', 'detaildata4'];
@@ -52,7 +59,7 @@ const Detail = () => {
       }
     };
     fetchData();
-  }, [serviceName]);
+  }, [serviceName, location.state]);
 
   const handleButtonClick = () => {
     window.location.href = "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/149200000026";
@@ -109,14 +116,14 @@ const Detail = () => {
             />
           </div>
           <div className={styles.mainContent}>
-          <div className={styles.fullDataSection}>
+            <div className={styles.fullDataSection}>
               <h2>전체 데이터:</h2>
               <table className={styles.dataTable}>
                 <tbody>
-                  {Object.entries(data).map(([key, value]) => (
+                  {data && Object.entries(data).map(([key, value]) => (
                     <tr key={key}>
                       <td>{key}</td>
-                      <td>{JSON.stringify(value)}</td>
+                      <td>{typeof value === 'object' ? JSON.stringify(value) : value}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -164,7 +171,6 @@ const Detail = () => {
                 </form>
               </div>
             </div>
-          
           </div>
         </div>
       </div>

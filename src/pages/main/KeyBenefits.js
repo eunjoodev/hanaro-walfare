@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./KeyBenefits.module.css";
 
 const KeyBenefits = () => {
@@ -16,6 +17,8 @@ const KeyBenefits = () => {
     "/assets/KeyBenefitsImage/KeyBenefits06.jpg",
   ];
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchBenefits = async () => {
       try {
@@ -30,7 +33,6 @@ const KeyBenefits = () => {
         console.log("API 응답 데이터:", data);
         if (data && data.data) {
           setBenefitBoxes(data.data.content.slice(0, 6));
-          // setBenefitBoxes(data.data.content || []);
         } else {
           console.error("Unexpected response structure", data);
         }
@@ -73,12 +75,20 @@ const KeyBenefits = () => {
     setIsPaused(!isPaused);
   };
 
+  const handleBenefitClick = (benefit) => {
+    navigate(`/detail/${encodeURIComponent(benefit.serviceName)}`, { state: { benefitData: benefit } });
+  };
+  
   const renderBenefitBoxes = () => {
     const boxesToShow = [];
     for (let i = 0; i < visibleBoxes; i++) {
       const index = (currentIndex + i) % benefitBoxes.length;
       boxesToShow.push(
-        <div className={styles.benefitBox} key={benefitBoxes[index].id}>
+        <div 
+          className={styles.benefitBox} 
+          key={benefitBoxes[index].id}
+          onClick={() => handleBenefitClick(benefitBoxes[index])}
+        >
           <div className={styles.imageContainer}>
             <img
               src={imageUrls[index]}
@@ -115,11 +125,11 @@ const KeyBenefits = () => {
         </span>
         <div className={styles.buttons}>
           <button onClick={handlePrev} className={styles.navButton}>
-            <img src="/assets/CaretLeft.png" className={styles.CaretLeft} />
+            <img src="/assets/CaretLeft.png" className={styles.CaretLeft} alt="Previous" />
           </button>
           <div className={styles.separator}></div>
           <button onClick={handleNext} className={styles.navButton}>
-            <img src="/assets/CaretRight.png" className={styles.CaretRight} />
+            <img src="/assets/CaretRight.png" className={styles.CaretRight} alt="Next" />
           </button>
           <button onClick={handlePausePlay} className={styles.pauseButton}>
             {isPaused ? "▶" : "||"}
