@@ -1,0 +1,57 @@
+.search-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 90px;
+  margin-bottom: 10px;
+  background-color: #e8f0fe;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.popular-searches {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+  padding-left: 10px; 
+  margin-left: 0px; 
+}
+
+
+.tabs button {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background-color: #fff;
+  border-bottom: 2px solid transparent;
+}
+
+.tabs .active {
+  border-bottom-color: black;
+  font-weight: bold;
+}
+
+.content-box {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-item {
+  width: calc(100% - 40px);
+}
