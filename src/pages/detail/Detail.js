@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Button from "../../components/common/button/Button";
-import Pagination from "../../components/common/pagination/Pagination";
 import styles from "./Detail.module.css";
 import Footer from "../../components/Footer";
 import Sidebar from "../../components/common/sidebar/Sidebar";
-
-const PAGE_SIZE = 5;
 
 const Detail = () => {
   const { serviceName } = useParams();
   const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [likeCount, setLikeCount] = useState(0);
-  const [dislikeCount, setDislikeCount] = useState(0);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,34 +57,6 @@ const Detail = () => {
     window.location.href = "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/149200000026";
   };
 
-  const handleLike = () => {
-    setLikeCount(likeCount + 1);
-  };
-
-  const handleDislike = () => {
-    setDislikeCount(dislikeCount + 1);
-  };
-
-  const handleCommentChange = (event) => {
-    setNewComment(event.target.value);
-  };
-
-  const handleCommentSubmit = (event) => {
-    event.preventDefault();
-    if (newComment.trim()) {
-      const updatedComments = [
-        ...comments,
-        { id: comments.length + 1, text: newComment },
-      ];
-      setComments(updatedComments);
-      setNewComment("");
-    }
-  };
-
-  const indexOfLastComment = currentPage * PAGE_SIZE;
-  const indexOfFirstComment = indexOfLastComment - PAGE_SIZE;
-  const currentComments = comments.slice(indexOfFirstComment, indexOfLastComment);
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -116,61 +80,51 @@ const Detail = () => {
             />
           </div>
           <div className={styles.mainContent}>
-            <div className={styles.fullDataSection}>
-              <h2>전체 데이터:</h2>
-              <table className={styles.dataTable}>
-                <tbody>
-                  {data && Object.entries(data).map(([key, value]) => (
-                    <tr key={key}>
-                      <td>{key}</td>
-                      <td>{typeof value === 'object' ? JSON.stringify(value) : value}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className={styles.serviceHeader}>
+              <h1>{data.서비스명}</h1>
+              <p>{data.서비스목적요약}</p>
             </div>
+            <table className={styles.infoTable}>
+              <thead>
+                <tr>
+                  <th>기준연도</th>
+                  <th>문의처</th>
+                  <th>지원주기</th>
+                  <th>제공유형</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{data.기준연도}</td>
+                  <td>{data.문의처}</td>
+                  <td>{data.지원주기}</td>
+                  <td>{data.제공유형}</td>
+                </tr>
+              </tbody>
+            </table>
+
             <div className={styles.buttonWrapper}>
-              <Button onClick={handleButtonClick} className={styles.largeButton}>
+              <Button onClick={handleButtonClick} className={styles.applyButton}>
                 신청하기
               </Button>
             </div>
-            <div className={styles.reactions}>
-              <button onClick={handleLike} className={styles.likeButton}>
-                좋아요 ({likeCount})
-              </button>
-              <button onClick={handleDislike} className={styles.dislikeButton}>
-                싫어요 ({dislikeCount})
-              </button>
+
+            <div className={styles.tabNavigation}>
+              <button className={styles.activeTab}>주요내용</button>
+              <button>지원대상</button>
+              <button>지원내용</button>
+              <button>신청방법</button>
+              <button>접수/문의</button>
             </div>
-            <div className={styles.commentsSection}>
-              <h2>의견</h2>
-              <ul className={styles.commentsList}>
-                {currentComments.map((comment) => (
-                  <li key={comment.id} className={styles.commentItem}>
-                    {comment.text}
-                  </li>
-                ))}
-              </ul>
-              <Pagination
-                totalPosts={comments.length}
-                postsPerPage={PAGE_SIZE}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-              />
-              <div className={styles.commentFormContainer}>
-                <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
-                  <textarea
-                    value={newComment}
-                    onChange={handleCommentChange}
-                    placeholder="의견을 작성하세요"
-                    className={styles.commentInput}
-                  ></textarea>
-                  <button type="submit" className={styles.commentSubmitButton}>
-                    제출
-                  </button>
-                </form>
-              </div>
+
+            {/* Tab Content */}
+            <div className={styles.tabContent}>
+              {/* Example content for "주요내용" tab */}
+              <p><strong>신청기간:</strong> 상시신청</p>
+              <p><strong>전화문의:</strong> 고용노동부 고객상담센터 (1350)</p>
+              {/* Add more content as needed */}
             </div>
+
           </div>
         </div>
       </div>
