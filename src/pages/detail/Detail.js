@@ -50,7 +50,12 @@ const Detail = () => {
   }, [serviceName, location.state]);
 
   const handleButtonClick = () => {
-    window.location.href = "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/149200000026";
+    if (data && data.상세조회URL) {
+      window.open(data.상세조회URL, '_blank');
+    } else {
+      console.error("상세조회URL이 없습니다.");
+    
+    }
   };
 
   const renderTabContent = () => {
