@@ -10,40 +10,35 @@ const Detail = () => {
   const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("지원대상"); // Set default active tab
+  const [activeTab, setActiveTab] = useState("지원대상");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        let benefitData;
+
         if (location.state && location.state.benefitData) {
-          setData(location.state.benefitData);
-          setLoading(false);
-          return;
+          benefitData = location.state.benefitData;
+        } else {
+          const detailDataFiles = ['detaildata1', 'detaildata2', 'detaildata3', 'detaildata4'];
+          const detailDataModules = await Promise.all(
+            detailDataFiles.map(file => import(`./${file}.json`))
+          );
+
+          const allData = detailDataModules.flatMap(module => module.default.data || []);
+
+          benefitData = allData.find(item =>
+            item.서비스명 && 
+            item.서비스명.toLowerCase().replace(/\s/g, '') === 
+            decodeURIComponent(serviceName).toLowerCase().replace(/\s/g, '')
+          );
         }
 
-        console.log("Received serviceName:", decodeURIComponent(serviceName));
-
-        const detailDataFiles = ['detaildata1', 'detaildata2', 'detaildata3', 'detaildata4'];
-        const detailDataModules = await Promise.all(
-          detailDataFiles.map(file => import(`./${file}.json`))
-        );
-
-        const allData = detailDataModules.flatMap(module => module.default.data || []);
-
-        console.log("All Detail Data:", allData);
-
-        const serviceData = allData.find(item => 
-          item.서비스명 && 
-          item.서비스명.toLowerCase().replace(/\s/g, '') === 
-          decodeURIComponent(serviceName).toLowerCase().replace(/\s/g, '')
-        );
-
-        if (serviceData) {
-          setData(serviceData);
-          console.log("Found service data:", serviceData);
+        if (benefitData) {
+          setData(benefitData);
+          console.log("Found service data:", benefitData);
         } else {
           console.error("Service not found");
-          console.log("Available services:", allData.map(item => item.서비스명).filter(Boolean));
         }
       } catch (error) {
         console.error("Error fetching details:", error);
@@ -161,4 +156,3 @@ const Detail = () => {
 };
 
 export default Detail;
-  
