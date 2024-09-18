@@ -1,16 +1,14 @@
+import React, { useState, useEffect } from "react";
+import styles from "./BulletinBoard.module.css";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
-import styles from "./BulletinBoard.module.css";
 import PostList from "../../components/community/postList/PostList";
 import Search from "../../components/community/Search";
 import Button from "../../components/common/button/Button";
 import Pagination from "./../../components/common/pagination/Pagination";
 import Modal from "../../components/common/modal/Modal";
 import { authState } from "../../states/Auth";
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function BulletinBoard() {
   const navigate = useNavigate();
@@ -23,10 +21,15 @@ function BulletinBoard() {
 
   const auth = useRecoilValue(authState);
 
+  const apiUrl =
+    process.env.REACT_APP_ENV === "production"
+      ? process.env.REACT_APP_PROXY_URL
+      : process.env.REACT_APP_BACKEND_URL;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/question`, {
+        const response = await axios.get(`${apiUrl}/question`, {
           params: {
             page: currentPage,
             size: postsPerPage,
@@ -43,7 +46,7 @@ function BulletinBoard() {
     };
 
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, apiUrl]);
 
   const handleWriteClick = () => {
     if (auth.isLoggedIn) {
