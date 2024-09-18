@@ -98,24 +98,33 @@ const WelfareList = () => {
       {isLoading ? (
         <p>로딩 중...</p>
       ) : (
-        <div className={layout === "grid" ? styles.welfareListContainer : styles.welfareListContainerList}>
-        {welfareItems.length > 0 ? (
-          welfareItems.map((item, index) => (
-            <WelfareBox 
-              key={`welfare-${index}-${item.serviceName}`} 
-              item={item} 
-              layout={layout} 
-              index={index}
-            />
-          ))
-        ) : (
-          <p>복지 혜택이 없습니다.</p>
-        )}
-      </div>
+        <div
+          className={
+            layout === "grid"
+              ? styles.welfareListContainer
+              : styles.welfareListContainerList
+          }
+        >
+          {welfareItems.length > 0 ? (
+            welfareItems.map((item, index) => (
+              <WelfareBox
+                key={`welfare-${index}-${item.serviceName}`}
+                item={item}
+                layout={layout}
+                index={index}
+              />
+            ))
+          ) : (
+            <p>복지 혜택이 없습니다.</p>
+          )}
+        </div>
       )}
       <div className={styles.pagination}>
         {page > 1 && (
-          <button onClick={() => handlePageChange(page - 1)} className={styles.pageButton}>
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            className={styles.pageButton}
+          >
             이전
           </button>
         )}
@@ -123,7 +132,10 @@ const WelfareList = () => {
           페이지 {page} / {totalPages}
         </span>
         {page < totalPages && (
-          <button onClick={() => handlePageChange(page + 1)} className={styles.pageButton}>
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            className={styles.pageButton}
+          >
             다음
           </button>
         )}
