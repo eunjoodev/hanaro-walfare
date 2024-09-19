@@ -17,6 +17,7 @@ function CreatePost() {
   const [content, setContent] = useState(state?.content || "");
   const [files, setFiles] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   useEffect(() => {
     if (isEdit) {
@@ -31,29 +32,51 @@ function CreatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+
     try {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("content", content);
-
-      // 선택된 파일을 FormData에 추가
-      for (let i = 0; i < files.length; i++) {
-        formData.append("files", files[i]); // 서버의 스웨거 정의에 맞춰 "files"로 추가
-      }
-
-      const response = await axios.post(`${API_URL}/question/add`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // 서버에서 성공적으로 응답이 오면 모달을 띄움
-      if (response.status === 200) {
-        setShowModal(true); // 모달 표시
-        console.log("게시글 등록 성공");
+      if (isEdit) {
+        const response = await axios.put(
+          `${API_URL}/question/${state.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.status === 200) {
+          setModalMessage("게시물이 수정되었습니다.");
+          setShowModal(true);
+        }
+      } else {
+        const response = await axios.post(`${API_URL}/question`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        if (response.status === 200) {
+          setModalMessage("게시물이 작성되었습니다.");
+          setShowModal(true);
+        }
       }
     } catch (error) {
       console.error("Error submitting post:", error);
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (isEdit) {
+      navigate(`/community/board/post`, { state: { id: state.id } });
+    } else {
+      navigate("/community/board");
     }
   };
 
@@ -79,11 +102,6 @@ function CreatePost() {
     "blockquote",
     "link",
   ];
-
-  const handleModalClose = () => {
-    setShowModal(false); // 모달을 닫고
-    navigate("/community/board"); // 게시글 리스트 페이지로 이동
-  };
 
   return (
     <div className={styles.createBoard}>
@@ -127,9 +145,7 @@ function CreatePost() {
           {isEdit ? "수정하기" : "작성하기"}
         </Button>
       </form>
-      {showModal && (
-        <Modal message="게시글이 등록되었습니다." onClose={handleModalClose} />
-      )}
+      {showModal && <Modal message={modalMessage} onClose={handleModalClose} />}
     </div>
   );
 }

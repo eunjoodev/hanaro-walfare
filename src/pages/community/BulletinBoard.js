@@ -98,7 +98,13 @@ function BulletinBoard() {
         <img src="/assets/ico_docu.png" alt="board" />
         전체 {totalPosts}건 ({currentPage} / {totalPages} 페이지)
       </div>
-      <PostList data={currentPosts} onTitleClick={handleTitleClick} />
+      <PostList
+        data={currentPosts}
+        currentPage={currentPage}
+        postsPerPage={postsPerPage}
+        totalPosts={totalPosts}
+        onTitleClick={handleTitleClick}
+      />
       <div className={styles.buttonContainer}>
         <Button
           type="button"
