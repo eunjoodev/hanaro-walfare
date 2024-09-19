@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import styles from "./Comment.module.css";
 import Modal from "./../common/modal/Modal";
+import axios from "axios";
 
-function Comment({ comments, onAddComment, onEditComment, onDeleteComment }) {
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
+function Comment({ postId, comments, onAddComment, onDeleteComment }) {
   const [newComment, setNewComment] = useState("");
   const [editMode, setEditMode] = useState(null);
   const [editContent, setEditContent] = useState("");
@@ -10,10 +13,58 @@ function Comment({ comments, onAddComment, onEditComment, onDeleteComment }) {
   const [modalMessage, setModalMessage] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (newComment.trim() !== "") {
-      onAddComment(newComment);
-      setNewComment("");
+      try {
+        const response = await axios.post(
+          `${API_URL}/questions/${postId}/answers`,
+          {
+            content: newComment,
+          }
+        );
+
+        if (response.status === 200) {
+          onAddComment(response.data);
+          setNewComment("");
+        } else {
+          setModalMessage("댓글을 추가하는 중 문제가 발생했습니다.");
+          setShowModal(true);
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error);
+        setModalMessage("댓글을 추가하는 중 오류가 발생했습니다.");
+        setShowModal(true);
+      }
+    }
+  };
+
+  const handleDeleteClick = (commentId) => {
+    setModalMessage("댓글을 삭제하시겠습니까?");
+    setConfirmDelete(commentId);
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (confirmDelete !== null) {
+      try {
+        const response = await axios.delete(
+          `${API_URL}/questions/${postId}/answers/${confirmDelete}`
+        );
+
+        if (response.status === 200) {
+          onDeleteComment(confirmDelete);
+          setConfirmDelete(null);
+          setModalMessage("댓글이 삭제되었습니다.");
+          setShowModal(true);
+        } else {
+          setModalMessage("댓글을 삭제하는 중 문제가 발생했습니다.");
+          setShowModal(true);
+        }
+      } catch (error) {
+        console.error("Error deleting comment:", error);
+        setModalMessage("댓글 삭제 중 오류가 발생했습니다.");
+        setShowModal(true);
+      }
     }
   };
 
@@ -27,25 +78,8 @@ function Comment({ comments, onAddComment, onEditComment, onDeleteComment }) {
   };
 
   const handleSaveClick = (id) => {
-    onEditComment(id, editContent);
-    setEditMode(null);
-    setModalMessage("댓글이 수정되었습니다");
+    setModalMessage("댓글 수정이 불가능합니다.");
     setShowModal(true);
-  };
-
-  const handleDeleteClick = (id) => {
-    setModalMessage("댓글을 삭제하시겠습니까?");
-    setConfirmDelete(id);
-    setShowModal(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (confirmDelete !== null) {
-      onDeleteComment(confirmDelete);
-      setConfirmDelete(null);
-      setModalMessage("댓글이 삭제되었습니다.");
-      setShowModal(true);
-    }
   };
 
   const handleCloseModal = () => {
@@ -73,7 +107,10 @@ function Comment({ comments, onAddComment, onEditComment, onDeleteComment }) {
           <div className={styles.commentItem}>
             <div className={styles.commentInfo}>
               <div className={styles.commentUser}>{comment.userId}</div>
-              <div className={styles.commentDate}>{comment.date}</div>
+              <div className={styles.commentDate}>
+                {" "}
+                {new Date(comment.date).toLocaleDateString()}
+              </div>
             </div>
             {editMode === comment.id ? (
               <textarea

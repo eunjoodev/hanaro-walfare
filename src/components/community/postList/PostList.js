@@ -1,14 +1,14 @@
 import styles from "./PostList.module.css";
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+function PostList({
+  data,
+  currentPage,
+  postsPerPage,
+  totalPosts,
+  onTitleClick,
+}) {
+  const startingNumber = totalPosts - (currentPage - 1) * postsPerPage;
 
-function PostList({ data, userId, onTitleClick }) {
   return (
     <div className={styles.table}>
       <div className={styles.tableHeader}>
@@ -22,9 +22,9 @@ function PostList({ data, userId, onTitleClick }) {
       </div>
       <div className={styles.tableBody}>
         {data.length > 0 ? (
-          data.map((post) => (
+          data.map((post, index) => (
             <div className={styles.tableRow} key={post.id}>
-              <div className={styles.tableCell}>{post.questionId}</div>
+              <div className={styles.tableCell}>{startingNumber - index}</div>
               <div className={styles.tableCell}>
                 {post.author.toLowerCase() === "unknown" ? "-" : post.author}
               </div>
@@ -35,7 +35,7 @@ function PostList({ data, userId, onTitleClick }) {
                 {post.title}
               </div>
               <div className={styles.tableCell}>
-                {formatDate(post.createdAt)}
+                {new Date(post.createdAt).toLocaleDateString()}
               </div>
               <div className={styles.tableCell}>{post.views}</div>
             </div>

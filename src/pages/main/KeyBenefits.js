@@ -30,7 +30,6 @@ const KeyBenefits = () => {
 
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log("API 응답 데이터:", data);
         if (data && data.data) {
           setBenefitBoxes(data.data.content.slice(0, 6));
         } else {
@@ -56,34 +55,35 @@ const KeyBenefits = () => {
     return () => clearInterval(interval);
   }, [isPaused, currentIndex, benefitBoxes.length]);
 
-  const handleNext = () => {
-    if (benefitBoxes.length > 0) {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % benefitBoxes.length);
-    }
-  };
-
-  const handlePrev = () => {
-    if (benefitBoxes.length > 0) {
-      setCurrentIndex(
-        (prevIndex) =>
-          (prevIndex - 1 + benefitBoxes.length) % benefitBoxes.length
+  const handleBenefitClick = async (benefit) => {
+    try {
+      // JSON 파일에서 데이터 가져오기
+      const detailDataFiles = ['detaildata1', 'detaildata2', 'detaildata3', 'detaildata4'];
+      const detailDataModules = await Promise.all(
+        detailDataFiles.map(file => import(`./${file}.json`))
       );
+
+      const allData = detailDataModules.flatMap(module => module.default.data || []);
+
+      // serviceName을 기준으로 데이터 찾기
+      const matchedService = allData.find(item =>
+        item.서비스명 && item.서비스명 === benefit.serviceName
+      );
+
+      if (matchedService) {
+        navigate(`/welfare/detail/${encodeURIComponent(benefit.serviceName)}`);
+      } else {
+        console.error("Matching service not found");
+      }
+    } catch (error) {
+      console.error("Error fetching details:", error);
     }
-  };
-
-  const handlePausePlay = () => {
-    setIsPaused(!isPaused);
-  };
-
-  const handleBenefitClick = (benefit) => {
-    navigate(`/detail/${encodeURIComponent(benefit.serviceName)}`, { state: { benefitData: benefit } });
   };
   
   const renderBenefitBoxes = () => {
-    const boxesToShow = [];
-    for (let i = 0; i < visibleBoxes; i++) {
+    return Array.from({ length: visibleBoxes }).map((_, i) => {
       const index = (currentIndex + i) % benefitBoxes.length;
-      boxesToShow.push(
+      return (
         <div 
           className={styles.benefitBox} 
           key={benefitBoxes[index].id}
@@ -107,8 +107,7 @@ const KeyBenefits = () => {
           </div>
         </div>
       );
-    }
-    return boxesToShow;
+    });
   };
 
   return (
@@ -124,14 +123,14 @@ const KeyBenefits = () => {
           <span>{benefitBoxes.length}</span>
         </span>
         <div className={styles.buttons}>
-          <button onClick={handlePrev} className={styles.navButton}>
+          <button onClick={() => setCurrentIndex((prevIndex) => (prevIndex - 1 + benefitBoxes.length) % benefitBoxes.length)} className={styles.navButton}>
             <img src="/assets/CaretLeft.png" className={styles.CaretLeft} alt="Previous" />
           </button>
           <div className={styles.separator}></div>
-          <button onClick={handleNext} className={styles.navButton}>
+          <button onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % benefitBoxes.length)} className={styles.navButton}>
             <img src="/assets/CaretRight.png" className={styles.CaretRight} alt="Next" />
           </button>
-          <button onClick={handlePausePlay} className={styles.pauseButton}>
+          <button onClick={() => setIsPaused(!isPaused)} className={styles.pauseButton}>
             {isPaused ? "▶" : "||"}
           </button>
         </div>

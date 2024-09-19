@@ -10,7 +10,15 @@
   justify-content: space-between;
 }
 
-.tag {
+.gridContentContainer {
+  flex-grow: 1;
+}
+
+.gridDetails {
+  margin-top: 20px;
+}
+
+.gridTag {
   font-size: 15px;
   color: #1b55bd;
   border: 1px solid #1b55bd;
@@ -20,7 +28,7 @@
   border-radius: 5px;
 }
 
-.title {
+.gridTitle {
   font-size: 1.6rem;
   font-weight: bold;
   color: #141414;
@@ -33,7 +41,7 @@
   -webkit-box-orient: vertical;
 }
 
-.summary {
+.gridSummary {
   font-size: 1rem;
   color: #141414;
   margin-bottom: 16px;
@@ -45,7 +53,7 @@
   -webkit-box-orient: vertical;
 }
 
-.fieldTag {
+.gridFieldTag {
   display: inline-block;
   background-color: #e8eef8;
   color: #1b55bd;
@@ -54,18 +62,89 @@
   margin-bottom: 20px;
 }
 
-.applicationDead {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-bottom: 8px;
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d7d7d8;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
 }
 
-.applicationWay {
+.listContentContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.listTagAndTitle {
+  width: 30%;
+}
+
+.listTag {
+  font-size: 13px;
+  color: #1b55bd;
+  border: 1px solid #1b55bd;
+  margin-bottom: 14px;
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+
+.listTitle {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #141414;
+  margin-bottom: 10px;
+  line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-bottom: 30px;
+}
+
+.listSummary {
+  font-size: 1rem;
+  color: #141414;
+  margin-bottom: 14px;
+  line-height: 1.2;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.listDetails {
+  justify-content: space-between;
+  width: 60%;
+}
+
+.listFieldTag {
+  display: inline-block;
+  background-color: #e8eef8;
+  color: #1b55bd;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.applicationContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.applicationDead,
+.applicationWay {
+  font-size: 0.9rem;
+  color: #707070;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 5px;
 }
 
 .detailButton {
