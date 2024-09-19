@@ -4,6 +4,14 @@ import styles from "./Post.module.css";
 import Comment from "./../../components/community/Comment";
 import Button from "./../../components/common/button/Button";
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const initialComments = {
   1: [
     {
@@ -32,7 +40,17 @@ const initialComments = {
 function Post() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { id, title, content, userId, date, attachments = [] } = location.state;
+  const {
+    id,
+    title,
+    content,
+    author,
+    createdAt,
+    modifiedAt,
+    userId,
+    date,
+    attachments = [],
+  } = location.state;
 
   const [comments, setComments] = useState(initialComments[id] || []);
 
@@ -71,11 +89,14 @@ function Post() {
       <div className={styles.postBox}>
         <div className={styles.postTitle}>{title}</div>
         <div className={styles.postDetail}>
-          <div>작성자: {userId}</div>
+          <div>작성자: {author.toLowerCase() === "unknown" ? "-" : author}</div>
           <div className={styles.detailDivider}></div>
-          <div>게시날짜: {date}</div>
+          <div>게시날짜: {formatDate(createdAt)}</div>
         </div>
-        <div className={styles.postContent}>{content}</div>
+        <div
+          className={styles.postContent}
+          dangerouslySetInnerHTML={{ __html: content }}
+        ></div>
         {attachments.length > 0 && (
           <div className={styles.attachments}>
             <h4>첨부파일</h4>

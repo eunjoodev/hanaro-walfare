@@ -25,7 +25,9 @@ function PostList({ data, userId, onTitleClick }) {
           data.map((post) => (
             <div className={styles.tableRow} key={post.id}>
               <div className={styles.tableCell}>{post.questionId}</div>
-              <div className={styles.tableCell}>{post.userId}</div>
+              <div className={styles.tableCell}>
+                {post.author.toLowerCase() === "unknown" ? "-" : post.author}
+              </div>
               <div
                 className={`${styles.tableCell} ${styles.cellContent}`}
                 onClick={() => onTitleClick(post)}
