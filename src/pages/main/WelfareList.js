@@ -129,7 +129,7 @@ const WelfareList = () => {
         </button>
 
         <span>
-          페이지 {page} / {totalPages}
+          {page} / {totalPages}
         </span>
 
         <button

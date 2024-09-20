@@ -5,13 +5,13 @@ const FilterComponent = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
     userType: "",
     applicationMethod: "",
-    serviceFields: [],
+    serviceFields: []
   });
 
   const [filterOptions, setFilterOptions] = useState({
     userTypes: [],
     applicationMethods: [],
-    serviceFields: [],
+    serviceFields: []
   });
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -35,7 +35,7 @@ const FilterComponent = ({ onFilterChange }) => {
         setFilterOptions({
           userTypes: data.data.userType || [],
           applicationMethods: data.data.applicationMethod || [],
-          serviceFields: data.data.serviceFiled || [],
+          serviceFields: data.data.serviceFiled || []
         });
       } catch (error) {
         console.error("Failed to fetch filter options", error);
@@ -48,14 +48,14 @@ const FilterComponent = ({ onFilterChange }) => {
   const handleUserTypeChange = (e) => {
     setFilters((prev) => ({
       ...prev,
-      userType: e.target.value,
+      userType: e.target.value
     }));
   };
 
   const handleApplicationMethodChange = (e) => {
     setFilters((prev) => ({
       ...prev,
-      applicationMethod: e.target.value,
+      applicationMethod: e.target.value
     }));
   };
 
@@ -75,6 +75,22 @@ const FilterComponent = ({ onFilterChange }) => {
   const handleFilterApply = () => {
     onFilterChange(filters);
     setIsDropdownOpen(false);
+  };
+
+  const handleRemoveFilter = (filterType, value) => {
+    setFilters((prev) => {
+      if (filterType === "userType") {
+        return { ...prev, userType: "" };
+      } else if (filterType === "applicationMethod") {
+        return { ...prev, applicationMethod: "" };
+      } else if (filterType === "serviceFields") {
+        return {
+          ...prev,
+          serviceFields: prev.serviceFields.filter((field) => field !== value)
+        };
+      }
+      return prev;
+    });
   };
 
   return (
@@ -149,7 +165,7 @@ const FilterComponent = ({ onFilterChange }) => {
                       } else {
                         setFilters((prev) => ({
                           ...prev,
-                          serviceFields: filterOptions.serviceFields,
+                          serviceFields: filterOptions.serviceFields
                         }));
                       }
                     }}
@@ -178,16 +194,36 @@ const FilterComponent = ({ onFilterChange }) => {
         </span>
         <div className={styles.selectedFilterList}>
           {filters.userType && (
-            <div className={styles.selectedFilterItem}>{filters.userType}</div>
+            <div className={styles.selectedFilterItem}>
+              {filters.userType}
+              <img
+                src="/assets/X.png"
+                alt="remove"
+                className={styles.removeIcon}
+                onClick={() => handleRemoveFilter("userType")}
+              />
+            </div>
           )}
           {filters.applicationMethod && (
             <div className={styles.selectedFilterItem}>
               {filters.applicationMethod}
+              <img
+                src="/assets/X.png"
+                alt="remove"
+                className={styles.removeIcon}
+                onClick={() => handleRemoveFilter("applicationMethod")}
+              />
             </div>
           )}
           {filters.serviceFields.map((field, index) => (
             <div key={index} className={styles.selectedFilterItem}>
               {field}
+              <img
+                src="/assets/X.png"
+                alt="remove"
+                className={styles.removeIcon}
+                onClick={() => handleRemoveFilter("serviceFields", field)}
+              />
             </div>
           ))}
         </div>
