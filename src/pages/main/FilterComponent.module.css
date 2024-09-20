@@ -102,7 +102,9 @@
 .applyButton {
   width: 100%;
   padding: 9px;
-  background-color: #adcff2;
+  /* background-color: #adcff2;
+   */
+  background-color: #3c8efa;
   color: white;
   border: none;
   border-radius: 4px;

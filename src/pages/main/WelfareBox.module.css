@@ -88,8 +88,8 @@
 
 .listTag {
   font-size: 13px;
-  color: #1b55bd;
-  border: 1px solid #1b55bd;
+  color: #3c8efa;
+  border: 1px solid #3c8efa;
   margin-bottom: 14px;
   display: inline-block;
   padding: 2px 8px;
@@ -101,6 +101,9 @@
   font-weight: bold;
   color: #141414;
   margin-bottom: 10px;
+
+  /* text-overflow: ellipsis;
+  white-space: nowrap; */
   line-height: 1.2;
   overflow: hidden;
   display: -webkit-box;
@@ -149,7 +152,9 @@
 }
 
 .detailButton {
-  background-color: #adcff2;
+  /* background-color: #adcff2;
+   */
+  background-color: #3c8efa;
   color: white;
   width: 140px;
   height: 40px;
