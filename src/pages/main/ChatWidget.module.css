@@ -6,7 +6,7 @@
 }
 
 .chatButton {
-  background-color: #8abef1;
+  background-color: #3c8efa;
   color: white;
   border: none;
   padding: 15px 20px;
@@ -18,7 +18,7 @@
 }
 
 .chatButton:hover {
-  background-color: #4899ea;
+  background-color: #8abef1;
 }
 
 .chatBox {
@@ -34,6 +34,7 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
+  z-index: 1000;
 }
 
 .chatHeader {

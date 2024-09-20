@@ -1,29 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./WelfareListHeader.module.css";
 
-const WelfareListHeader = ({
-  totalItems,
-  itemsPerPage,
-  setItemsPerPage,
-  layout,
-  setLayout,
-}) => {
+const WelfareListHeader = ({ totalItems, layout, setLayout }) => {
+  const [showTooltip, setShowTooltip] = useState(true);
+
+  const handleCloseTooltip = () => {
+    setShowTooltip(false);
+  };
+
   return (
     <div className={styles.headerContainer}>
       <div className={styles.totalItems}>총 게시물: {totalItems}개</div>
 
+      {showTooltip && (
+        <div className={styles.tooltip}>
+          <p>보기 편한 방식을 선택해 보세요!</p>
+          <button className={styles.closeButton} onClick={handleCloseTooltip}>
+            X
+          </button>
+        </div>
+      )}
+
       <div className={styles.controls}>
         <label>
           목록 표시 갯수:
-          <select
-            value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className={styles.select}
-          >
-            <option value={24}>24개</option>
-            <option value={48}>48개</option>
-            <option value={96}>96개</option>
-          </select>
+          <span className={styles.fixedItems}>24개</span>
         </label>
 
         <button
