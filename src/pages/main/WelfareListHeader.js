@@ -1,13 +1,7 @@
 import React from "react";
 import styles from "./WelfareListHeader.module.css";
 
-const WelfareListHeader = ({
-  totalItems,
-  itemsPerPage,
-  setItemsPerPage,
-  layout,
-  setLayout,
-}) => {
+const WelfareListHeader = ({ totalItems, layout, setLayout }) => {
   return (
     <div className={styles.headerContainer}>
       <div className={styles.totalItems}>총 게시물: {totalItems}개</div>
@@ -15,15 +9,7 @@ const WelfareListHeader = ({
       <div className={styles.controls}>
         <label>
           목록 표시 갯수:
-          <select
-            value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className={styles.select}
-          >
-            <option value={24}>24개</option>
-            <option value={48}>48개</option>
-            <option value={96}>96개</option>
-          </select>
+          <span className={styles.fixedItems}>24개</span>
         </label>
 
         <button
