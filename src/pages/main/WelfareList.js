@@ -8,7 +8,7 @@ const WelfareList = () => {
   const [filters, setFilters] = useState({
     userType: "",
     applicationMethod: "",
-    serviceFields: [],
+    serviceFields: []
   });
 
   const [welfareItems, setWelfareItems] = useState([]);
@@ -30,7 +30,7 @@ const WelfareList = () => {
       "application-method": filters.applicationMethod || "",
       "service-field": filters.serviceFields.join(","),
       page: page.toString(),
-      size: itemsPerPage.toString(),
+      size: itemsPerPage.toString()
     });
 
     const apiUrl = `/api/proxy/main?${query.toString()}`;
@@ -120,25 +120,25 @@ const WelfareList = () => {
         </div>
       )}
       <div className={styles.pagination}>
-        {page > 1 && (
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            className={styles.pageButton}
-          >
-            이전
-          </button>
-        )}
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          className={styles.pageButton}
+          disabled={page === 1}
+        >
+          이전
+        </button>
+
         <span>
           페이지 {page} / {totalPages}
         </span>
-        {page < totalPages && (
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            className={styles.pageButton}
-          >
-            다음
-          </button>
-        )}
+
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          className={styles.pageButton}
+          disabled={page === totalPages}
+        >
+          다음
+        </button>
       </div>
     </div>
   );

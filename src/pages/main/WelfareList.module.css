@@ -22,8 +22,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin: 20px 0;
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 110px;
 }
 
 .pageButton {
@@ -37,4 +38,9 @@
 
 .pageButton:hover {
   background-color: #adcff2;
+}
+
+.pageButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
