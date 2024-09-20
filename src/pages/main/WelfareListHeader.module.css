@@ -4,6 +4,7 @@
   align-items: center;
   margin: 20px auto;
   max-width: 1280px;
+  position: relative;
 }
 
 .totalItems {
@@ -21,7 +22,7 @@
 .fixedItems {
   font-size: 1.1rem;
   margin-left: 5px;
-  margin-right: 10px;
+  margin-right: px;
 }
 
 .iconButton {
@@ -41,4 +42,57 @@
 .icon {
   width: 24px;
   height: 24px;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.tooltip {
+  position: absolute;
+  top: -70px;
+  right: 0;
+  background-color: #3c8efa;
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 900;
+  animation: float 1.5s ease-in-out infinite;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  left: 84%;
+  transform: translateX(-50%);
+  border-width: 10px;
+  border-style: solid;
+  border-color: #3c8efa transparent transparent transparent;
+}
+
+.tooltip p {
+  margin: 0;
+  font-size: 1rem;
+  color: #ffffff;
+  padding-left: 8px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #ffffff;
+  margin-top: 2px;
 }
