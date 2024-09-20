@@ -16,6 +16,7 @@ function BulletinBoard() {
   const [allData, setAllData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const postsPerPage = 10;
   const [showModal, setShowModal] = useState(false);
 
@@ -40,6 +41,7 @@ function BulletinBoard() {
         setFilteredData(elements);
         setAllData(elements);
         setTotalPosts(pagination.totalCount);
+        setTotalPages(pagination.totalPage);
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -79,13 +81,6 @@ function BulletinBoard() {
     setCurrentPage(1);
   };
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = filteredData.slice(indexOfFirstPost, indexOfLastPost);
-  console.log("Current Posts:", currentPosts);
-
-  const totalPages = Math.ceil(totalPosts / postsPerPage);
-
   const handleCloseModal = () => {
     setShowModal(false);
     navigate("/login");
@@ -99,7 +94,7 @@ function BulletinBoard() {
         전체 {totalPosts}건 ({currentPage} / {totalPages} 페이지)
       </div>
       <PostList
-        data={currentPosts}
+        data={filteredData}
         currentPage={currentPage}
         postsPerPage={postsPerPage}
         totalPosts={totalPosts}
@@ -119,6 +114,7 @@ function BulletinBoard() {
         postsPerPage={postsPerPage}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
+        totalPages={totalPages}
       />
       {showModal && (
         <Modal message="로그인을 먼저 해주세요." onClose={handleCloseModal} />
