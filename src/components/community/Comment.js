@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import styles from "./Comment.module.css";
 import Modal from "./../common/modal/Modal";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../states/Auth";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -13,7 +16,15 @@ function Comment({ postId, comments, onAddComment, onDeleteComment }) {
   const [modalMessage, setModalMessage] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
 
+  const auth = useRecoilValue(authState);
+  const navigate = useNavigate();
+
   const handleAddComment = async () => {
+    if (!auth.isLoggedIn) {
+      setModalMessage("로그인을 먼저 해주세요.");
+      setShowModal(true);
+      return;
+    }
     if (newComment.trim() !== "") {
       try {
         const response = await axios.post(
@@ -82,9 +93,9 @@ function Comment({ postId, comments, onAddComment, onDeleteComment }) {
     setShowModal(true);
   };
 
-  const handleCloseModal = () => {
+  const handleLoginRedirect = () => {
     setShowModal(false);
-    setConfirmDelete(null);
+    navigate("/login");
   };
 
   return (
@@ -141,20 +152,22 @@ function Comment({ postId, comments, onAddComment, onDeleteComment }) {
                 </button>
               </>
             ) : (
-              <>
-                <button
-                  className={styles.commentEditBtn}
-                  onClick={() => handleEditClick(comment)}
-                >
-                  수정
-                </button>
-                <button
-                  className={styles.commentDeleteBtn}
-                  onClick={() => handleDeleteClick(comment.id)}
-                >
-                  삭제
-                </button>
-              </>
+              auth.user?.username === comment.userId && (
+                <>
+                  <button
+                    className={styles.commentEditBtn}
+                    onClick={() => handleEditClick(comment)}
+                  >
+                    수정
+                  </button>
+                  <button
+                    className={styles.commentDeleteBtn}
+                    onClick={() => handleDeleteClick(comment.id)}
+                  >
+                    삭제
+                  </button>
+                </>
+              )
             )}
           </div>
         </div>
@@ -163,7 +176,7 @@ function Comment({ postId, comments, onAddComment, onDeleteComment }) {
         <Modal
           message={modalMessage}
           onClose={
-            confirmDelete !== null ? handleConfirmDelete : handleCloseModal
+            confirmDelete !== null ? handleConfirmDelete : handleLoginRedirect
           }
         />
       )}
