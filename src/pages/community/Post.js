@@ -81,14 +81,6 @@ function Post() {
     }
   };
 
-  // const handleEditComment = (commentId, newContent) => {
-  //   setComments((prevComments) =>
-  //     prevComments.map((comment) =>
-  //       comment.id === commentId ? { ...comment, content: newContent } : comment
-  //     )
-  //   );
-  // };
-
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await axios.delete(

@@ -7,7 +7,6 @@ function Community() {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(() => {
-    // 초기 활성 항목을 URL 경로에 따라 설정
     if (location.pathname.includes("faq")) return "FAQ(추가되었을 경우 예)";
     return "자유게시판";
   });
