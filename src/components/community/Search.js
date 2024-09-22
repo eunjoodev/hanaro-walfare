@@ -1,13 +1,22 @@
 import { useState } from "react";
 import styles from "./Search.module.css";
+import Modal from "./../common/modal/Modal";
 
 function Search({ onSearch, className = "" }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("t");
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch(searchTerm, searchType);
+    if (searchTerm.trim() === "") {
+      setModalMessage("작성된 검색 내용이 없습니다.");
+      setShowModal(true);
+      return;
+    }
+
+    onSearch(searchTerm.trim(), searchType);
   };
 
   return (
@@ -31,6 +40,9 @@ function Search({ onSearch, className = "" }) {
         />
         <button type="submit">검색</button>
       </form>
+      {showModal && (
+        <Modal message={modalMessage} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 }

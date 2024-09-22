@@ -25,27 +25,30 @@ function Comment({ postId, comments, onAddComment, onDeleteComment }) {
       setShowModal(true);
       return;
     }
-    if (newComment.trim() !== "") {
-      try {
-        const response = await axios.post(
-          `${API_URL}/questions/${postId}/answers`,
-          {
-            content: newComment,
-          }
-        );
 
-        if (response.status === 200) {
-          onAddComment(response.data);
-          setNewComment("");
-        } else {
-          setModalMessage("댓글을 추가하는 중 문제가 발생했습니다.");
-          setShowModal(true);
-        }
-      } catch (error) {
-        console.error("Error adding comment:", error);
-        setModalMessage("댓글을 추가하는 중 오류가 발생했습니다.");
+    if (newComment.trim() === "") {
+      setModalMessage("작성된 내용이 없습니다.");
+      setShowModal(true);
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${API_URL}/questions/${postId}/answers`,
+        { content: newComment }
+      );
+
+      if (response.status === 200) {
+        onAddComment(response.data);
+        setNewComment("");
+      } else {
+        setModalMessage("댓글을 추가하는 중 문제가 발생했습니다.");
         setShowModal(true);
       }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      setModalMessage("댓글을 추가하는 중 오류가 발생했습니다.");
+      setShowModal(true);
     }
   };
 
