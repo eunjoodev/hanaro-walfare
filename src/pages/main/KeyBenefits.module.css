@@ -3,6 +3,14 @@
   max-width: 1280px;
   margin: 0 auto;
   text-align: center;
+  margin-bottom: 80px;
+}
+
+.controlsAndTitleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .imagesContainer {
@@ -17,7 +25,6 @@
   color: #333;
   font-weight: bold;
   text-align: left;
-  margin-bottom: 28px;
 }
 
 .benefitBox {
@@ -25,6 +32,12 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.benefitBox:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hover 시 약간의 그림자 추가 */
 }
 
 .imageContainer {
@@ -43,28 +56,76 @@
   text-align: start;
   background-color: #f5f8fc;
   padding: 12px;
-  min-height: 90px;
+  min-height: 40px;
 }
 
-.benefitTitle {
+.benefitTitleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+
+.benefitTitleText {
   font-size: 1.2rem;
   color: #333;
-  margin: 0;
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 85%;
+}
+
+.benefitTitleIcon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.benefitBox:hover .benefitTitle {
+  color: #006ae2;
+}
+
+.accordionContent {
+  background-color: #f5f8fc;
+}
+
+.accordionContent > div {
   margin-bottom: 8px;
 }
 
-.summary {
+.gridSummary {
+  margin-top: 14px;
   font-size: 1rem;
-  color: #333;
-  margin: 0;
-  display: flex;
-  justify-content: start;
-  text-align: start;
-  /* white-space: nowrap;
+  color: #141414;
+  margin-bottom: 12px;
+  line-height: 1.2;
   overflow: hidden;
-  text-overflow: ellipsis; */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.gridFieldTag {
+  display: inline-block;
+  background-color: #e8eef8;
+  color: #1b55bd;
+  padding: 3px 8px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.applicationDead,
+.applicationWay {
+  font-size: 0.9rem;
+  color: #707070;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 5px;
 }
 
 .controls {
@@ -105,7 +166,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0; /* padding 제거 */
+  padding: 0;
 }
 
 .navButton:hover {

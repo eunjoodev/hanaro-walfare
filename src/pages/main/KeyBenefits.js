@@ -6,6 +6,7 @@ const KeyBenefits = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [benefitBoxes, setBenefitBoxes] = useState([]);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   const visibleBoxes = 3;
   const imageUrls = [
@@ -44,7 +45,7 @@ const KeyBenefits = () => {
   }, []);
 
   useEffect(() => {
-    if (!benefitBoxes.length) return;
+    if (!benefitBoxes.length || expandedIndex !== null) return;
 
     let interval;
     if (!isPaused) {
@@ -53,43 +54,32 @@ const KeyBenefits = () => {
       }, 3800);
     }
     return () => clearInterval(interval);
-  }, [isPaused, currentIndex, benefitBoxes.length]);
+  }, [isPaused, currentIndex, benefitBoxes.length, expandedIndex]);
 
-  const handleBenefitClick = async (benefit) => {
-    try {
-      // JSON 파일에서 데이터 가져오기
-      const detailDataFiles = ['detaildata1', 'detaildata2', 'detaildata3', 'detaildata4'];
-      const detailDataModules = await Promise.all(
-        detailDataFiles.map(file => import(`./${file}.json`))
-      );
+  const handleBenefitClick = (benefit) => {
+    navigate(`/welfare/detail/${encodeURIComponent(benefit.serviceName)}`);
+  };
 
-      const allData = detailDataModules.flatMap(module => module.default.data || []);
-
-      // serviceName을 기준으로 데이터 찾기
-      const matchedService = allData.find(item =>
-        item.서비스명 && item.서비스명 === benefit.serviceName
-      );
-
-      if (matchedService) {
-        navigate(`/welfare/detail/${encodeURIComponent(benefit.serviceName)}`);
-      } else {
-        console.error("Matching service not found");
-      }
-    } catch (error) {
-      console.error("Error fetching details:", error);
+  const toggleAccordion = (index) => {
+    setExpandedIndex(index === expandedIndex ? null : index);
+    if (index === expandedIndex) {
+      setIsPaused(false);
+    } else {
+      setIsPaused(true);
     }
   };
-  
+
   const renderBenefitBoxes = () => {
     return Array.from({ length: visibleBoxes }).map((_, i) => {
       const index = (currentIndex + i) % benefitBoxes.length;
+      const isExpanded = index === expandedIndex;
+
       return (
-        <div 
-          className={styles.benefitBox} 
-          key={benefitBoxes[index].id}
-          onClick={() => handleBenefitClick(benefitBoxes[index])}
-        >
-          <div className={styles.imageContainer}>
+        <div className={styles.benefitBox} key={benefitBoxes[index].id}>
+          <div
+            className={styles.imageContainer}
+            onClick={() => handleBenefitClick(benefitBoxes[index])}
+          >
             <img
               src={imageUrls[index]}
               alt="복지 이미지"
@@ -97,13 +87,41 @@ const KeyBenefits = () => {
             />
           </div>
           <div className={styles.textContainer}>
-            <h3 className={styles.benefitTitle}>
-              [{benefitBoxes[index].supervisingAgencyName}]
-              {benefitBoxes[index].serviceName}
+            <h3 className={styles.benefitTitleContainer}>
+              <span className={styles.benefitTitleText}>
+                [{benefitBoxes[index].supervisingAgencyName}]
+                {benefitBoxes[index].serviceName}
+              </span>
+              <img
+                src="/assets/CaretDown.png"
+                alt="Toggle Accordion"
+                className={styles.benefitTitleIcon}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleAccordion(index);
+                }}
+              />
             </h3>
-            <div className={styles.summary}>
-              {benefitBoxes[index].servicePurposeSummary}
-            </div>
+            {isExpanded && (
+              <div className={styles.accordionContent}>
+                <div className={styles.accordionItem}>
+                  <div className={styles.gridSummary}>
+                    {benefitBoxes[index].servicePurposeSummary}
+                  </div>
+                  <div className={styles.gridFieldTag}>
+                    {benefitBoxes[index].serviceField}
+                  </div>
+                  <div className={styles.applicationContainer}>
+                    <div className={styles.applicationDead}>
+                      신청 기한: {benefitBoxes[index].applicationDeadline}
+                    </div>
+                    <div className={styles.applicationWay}>
+                      신청 방법: {benefitBoxes[index].applicationMethod}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       );
@@ -112,28 +130,57 @@ const KeyBenefits = () => {
 
   return (
     <section className={styles.benefitsSection}>
-      <div className={styles.title}>주요 혜택</div>
+      <div className={styles.controlsAndTitleContainer}>
+        <div className={styles.title}>주요 혜택</div>
+        <div className={styles.controls}>
+          <span className={styles.pageIndicator}>
+            <span className={styles.currentPage}>{currentIndex + 1}</span>
+            {" / "}
+            <span>{benefitBoxes.length}</span>
+          </span>
+          <div className={styles.buttons}>
+            <button
+              onClick={() =>
+                setCurrentIndex(
+                  (prevIndex) =>
+                    (prevIndex - 1 + benefitBoxes.length) % benefitBoxes.length
+                )
+              }
+              className={styles.navButton}
+            >
+              <img
+                src="/assets/CaretLeft.png"
+                className={styles.CaretLeft}
+                alt="Previous"
+              />
+            </button>
+            <div className={styles.separator}></div>
+            <button
+              onClick={() =>
+                setCurrentIndex(
+                  (prevIndex) => (prevIndex + 1) % benefitBoxes.length
+                )
+              }
+              className={styles.navButton}
+            >
+              <img
+                src="/assets/CaretRight.png"
+                className={styles.CaretRight}
+                alt="Next"
+              />
+            </button>
+            <button
+              onClick={() => setIsPaused(!isPaused)}
+              className={styles.pauseButton}
+            >
+              {isPaused ? "▶" : "||"}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.imagesContainer}>
         {benefitBoxes.length > 0 ? renderBenefitBoxes() : <p>로딩 중...</p>}
-      </div>
-      <div className={styles.controls}>
-        <span className={styles.pageIndicator}>
-          <span className={styles.currentPage}>{currentIndex + 1}</span>
-          {" / "}
-          <span>{benefitBoxes.length}</span>
-        </span>
-        <div className={styles.buttons}>
-          <button onClick={() => setCurrentIndex((prevIndex) => (prevIndex - 1 + benefitBoxes.length) % benefitBoxes.length)} className={styles.navButton}>
-            <img src="/assets/CaretLeft.png" className={styles.CaretLeft} alt="Previous" />
-          </button>
-          <div className={styles.separator}></div>
-          <button onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % benefitBoxes.length)} className={styles.navButton}>
-            <img src="/assets/CaretRight.png" className={styles.CaretRight} alt="Next" />
-          </button>
-          <button onClick={() => setIsPaused(!isPaused)} className={styles.pauseButton}>
-            {isPaused ? "▶" : "||"}
-          </button>
-        </div>
       </div>
     </section>
   );
