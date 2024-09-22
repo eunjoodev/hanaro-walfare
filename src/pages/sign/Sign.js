@@ -79,7 +79,13 @@ const Sign = () => {
       return;
     }
 
+    if (title === "uid" && !isValidId) {
+      openModal("유효한 아이디를 입력해 주세요.");
+      return;
+    }
+
     const pathName = title === "uid" ? "id" : "email";
+
     try {
       const response = await axios.post(`${apiUrl}/auth/${pathName}`, {
         [title]: value,
@@ -116,6 +122,11 @@ const Sign = () => {
     event.preventDefault();
     if (!isValidId || !isValidPassword || !isValidPasswordCheck) {
       openModal("입력 정보를 확인해주세요.");
+      return;
+    }
+
+    if (!isCheckedData.uid || !isCheckedData.email) {
+      openModal("중복 확인을 완료해 주세요.");
       return;
     }
 
