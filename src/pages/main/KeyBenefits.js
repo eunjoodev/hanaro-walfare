@@ -93,7 +93,7 @@ const KeyBenefits = () => {
                 {benefitBoxes[index].serviceName}
               </span>
               <img
-                src="/assets/CaretDown.png"
+                src="/assets/caretdown.png"
                 alt="Toggle Accordion"
                 className={styles.benefitTitleIcon}
                 onClick={(e) => {
