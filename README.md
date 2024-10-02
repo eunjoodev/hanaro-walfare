@@ -1,7 +1,9 @@
 # Hanaro-Walfare (React-2nd-Project)
 리액트 프론트엔드 2nd 프로젝트 정부 복지서비스 제공 사이트
 <br>
-<br>
+- 배포 URL : [https://ohmycode-readme.netlify.app](https://hanaro-walfare.vercel.app/)
+- Test ID : test1234
+- Test PW : test1234
 
 ## 🖥️ 프로젝트 소개
 사용자들이 복지 서비스를 쉽고 편리하게 찾고 신청 할 수 있는 웹 플랫폼 입니다.
