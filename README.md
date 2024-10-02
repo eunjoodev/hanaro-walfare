@@ -21,21 +21,21 @@
 - **Database** : MySQL
 
 ## 📌 주요 기능
-#### 메인 페이지 - <a href="[https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(%EB%A9%94%EC%9D%B8-Page)](https://github.com/eunjoodev/hanaro-walfare/tree/main/src/pages/main)" >상세보기 - WIKI 이동</a>
-- YouTube API 연동
-- 메인 포스터(영화) 이미지 슬라이드(CSS)
-#### 1대1문의 및 공지사항 - <a href="" >상세보기 - WIKI 이동</a> 
-- 글 작성, 읽기, 수정, 삭제(CRUD)
+#### 메인 페이지
+- 백엔드 API 연동
+- 필터링 기능 - FilterComponent
+- 아코디언 기능 - KeyBenefits
+- 복지 리스트 데이터 연결 및 페이지네이션 - WelfareList
+- 주요 혜택 스크롤 기능 - KeyBenefits
 
-
-#### 로그인 - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(Login)" >상세보기 - WIKI 이동</a>
+#### 로그인
 - DB값 검증
 - ID찾기, PW찾기
 - 로그인 시 쿠키(Cookie) 및 세션(Session) 생성
-#### 회원가입 - <a href="https://github.com/chaehyuenwoo/SpringBoot-Project-MEGABOX/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C(Member)" >상세보기 - WIKI 이동</a>
+
+#### 회원가입
 - 주소 API 연동
 - ID 중복 체크
-
 
 #### 소통광장
 - 영화관 추가(대분류, 소분류)
