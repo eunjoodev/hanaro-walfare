@@ -20,6 +20,8 @@
 - **IDE** : visual studio code 1.93
 - **Framework** : React
 - **Database** : MySQL
+<br>
+<br>
 
 ## 📌 주요 기능
 #### 메인 페이지
